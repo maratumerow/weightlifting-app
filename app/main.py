@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 
-from api.routes.users import router
-from data.models.base import Base
-from data.session import engine
+from app.api.routes.users import router
+from app.config import AppConfig
+from app.data.session import db_connect_init
 
-Base.metadata.drop_all(bind=engine)
-Base.metadata.create_all(bind=engine)
+db_connect_init()
+config = AppConfig()
 
-app = FastAPI()
+app = FastAPI(title=config.api_title)
 app.include_router(router=router)
+
+
