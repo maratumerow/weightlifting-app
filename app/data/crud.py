@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from data.models.user import User
-from data.security import get_password_hash
-from schemas.user import UserCreate
+from app.data.models.user import User
+from app.data.security import get_password_hash
+from app.schemas.user import UserCreate
 
 
 def get_user(db: Session, user_id: int) -> User | None:

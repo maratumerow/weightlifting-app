@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
-from constants import UserGroupType
-from data.models.base import Base
-from data.models.base_fields import created_at, int_pk
+from app.constants import UserGroupType
+from app.data.models.base import Base
+from app.data.models.base_fields import int_pk, created_at
 
 
 class User(Base):
