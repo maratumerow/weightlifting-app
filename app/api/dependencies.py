@@ -6,7 +6,8 @@ from app.data.session import SessionLocal
 
 router = APIRouter()
 
-def get_db() -> SessionLocal:
+
+def get_db() -> SessionLocal: # type: ignore
     """
     Provides a database session to the dependent functions
     using FastAPI's dependency injection.
@@ -21,4 +22,3 @@ def get_db() -> SessionLocal:
 
 def user_repo_dep(db: Session = Depends(get_db)) -> UserRepository:
     return UserRepository(db=db)
-

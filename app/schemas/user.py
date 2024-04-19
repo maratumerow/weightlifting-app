@@ -1,32 +1,47 @@
-from datetime import datetime
+import datetime
 
 from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    """
-    Base model for user with email and username attributes.
-    """
+    """Base model for user with email and username attributes."""
 
     email: str
     username: str
 
 
 class UserCreate(UserBase):
-    """
-    Model for creating a new user with password attribute.
-    """
+    """Model for creating a new user with password attribute."""
 
     password: str
 
 
 class User(UserBase):
     """
-    Model representing a user with ID, email, username, and creation timestamp.
+    Model representing a user.
     """
 
     id: int
-    created_at: datetime
+    created_at: datetime.datetime
+    first_name: str
+    last_name: str
+    image: str
+    email_subscribe: bool
+    updated_at: datetime.datetime
 
-    class Config:
-        from_attributes = True
+
+class UserUpdate(UserBase):
+    """Model for updating an existing attributes."""
+
+    password: str
+    first_name: str
+    last_name: str
+    image: str
+    email_subscribe: bool
+
+
+class DeleteUserResponse(BaseModel):
+    """Model for response to user deletion."""
+
+    detail: str
+    status: bool

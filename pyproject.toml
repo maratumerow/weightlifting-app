@@ -11,6 +11,8 @@ fastapi = "^0.110.0"
 sqlalchemy = "^2.0.29"
 uvicorn = "^0.29.0"
 python-multipart = "^0.0.9"
+pydantic = {extras = ["email"], version = "^2.7.0"}
+pydantic-settings = "^2.2.1"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -9,5 +9,3 @@ config = AppConfig()
 
 app = FastAPI(title=config.api_title)
 app.include_router(router=router)
-
-
