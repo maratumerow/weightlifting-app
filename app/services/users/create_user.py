@@ -13,23 +13,20 @@ def create_user_service(
 
     user = user.model_validate(user)
 
-    db_user_by_email = user_repo.get_user_by_email(email=user.email)
-    db_user_by_username = user_repo.get_user_by_username(
-        username=user.username
+    check_user = user_repo.get_username_and_email_exists(
+        username=user.username,
+        email=user.email,
     )
+    error_msgs = []
+    if check_user.is_email:
+        error_msgs.append("User with this email already registered")
+    if check_user.is_username:
+        error_msgs.append("User with this username already registered")
 
-    if db_user_by_email:
-        raise ObjectsAlreadyCreated(
-            detail="User with this email already registered"
-        )
-    if db_user_by_username:
-        raise ObjectsAlreadyCreated(
-            detail="User with this username already registered"
-        )
+    if error_msgs:
+        raise ObjectsAlreadyCreated(detail=error_msgs)
 
     user.password = generate_password_digest(user.password).hex()
-
     user = user_repo.create_user(user=user)
-
     push_user_email_service(email=user.email)
     return user
