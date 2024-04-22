@@ -1,8 +1,11 @@
 from fastapi import HTTPException
+from sqlalchemy import select, func
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.operators import exists
 
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
 from app.data.models.user import User
+from app.schemas.user import UserExists
 
 
 class UserRepository:
@@ -24,6 +27,34 @@ class UserRepository:
         """Get a user by username."""
 
         return self.db.query(User).filter(User.username == username).first()
+
+    def get_username_and_email_exists(self, username: str, email: str) -> UserExists:
+        """
+        select
+            (exists(select username from users where username="username"))
+                 as u_name,
+            (exists(select email from users where email="email"))
+             as u_email
+        from users limit 1
+        """
+
+        subq_username = (
+            select(User.username).where(User.username == username)
+        ).exists()
+        subq_email =(
+            select(User.email).where(User.email == email)
+        ).exists()
+
+        is_username, is_email = self.db.execute(
+            select(
+                subq_username.label("u_name"),
+                subq_email.label("u_email")).limit(1),
+        ).first()
+
+        return UserExists(
+            is_username=is_username,
+            is_email=is_email,
+        )
 
     def get_users(self, skip: int = 0, limit: int = 100) -> list[User]:
         """Get a list of users with optional skipping and limiting."""

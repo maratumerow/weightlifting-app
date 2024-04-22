@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class UserBase(BaseModel):
@@ -45,3 +45,8 @@ class DeleteUserResponse(BaseModel):
 
     detail: str
     status: bool
+
+
+class UserExists(BaseModel):
+    is_username: bool = False
+    is_email: bool =False

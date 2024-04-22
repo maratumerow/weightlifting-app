@@ -4,9 +4,13 @@ from app.api.dependencies import user_repo_dep
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
 from app.data.repositories.user import UserRepository
 from app.schemas.user import DeleteUserResponse, User
-from app.services.users import (create_user_service, delete_user_service,
-                                get_user_service, get_users_service,
-                                update_user_service)
+from app.services.users import (
+    create_user_service,
+    delete_user_service,
+    get_user_service,
+    get_users_service,
+    update_user_service,
+)
 
 router = APIRouter(tags=["Users"])
 
