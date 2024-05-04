@@ -15,7 +15,7 @@ PWD_HASH_SALT = base64.b64decode("salt")
 PWD_HASH_ITERATIONS = 100_000
 
 
-def __generate_password_digest(password: str) -> bytes:
+def _generate_password_digest(password: str) -> bytes:
     """
     Generate a password digest using PBKDF2-HMAC-SHA256.
     """
@@ -31,7 +31,7 @@ def get_password_hash(password: str) -> str:
     """
     Generate a password hash and return it as a base64 encoded string.
     """
-    return base64.b64encode(__generate_password_digest(password)).decode(
+    return base64.b64encode(_generate_password_digest(password)).decode(
         "utf-8"
     )
 
@@ -41,7 +41,7 @@ def compare_password(hash_password: str | bytes, password: str) -> bool:
     Compare a hashed password with a password. Return True if they match.
     """
     return hmac.compare_digest(
-        base64.b64decode(hash_password), __generate_password_digest(password)
+        base64.b64decode(hash_password), _generate_password_digest(password)
     )
 
 
