@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
@@ -30,23 +30,27 @@ class User(UserBase):
     updated_at: datetime.datetime
 
 
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
     """Model for updating an existing attributes."""
 
+    first_name: str | None
+    last_name: str | None
+
+
+class UserLogin(BaseModel):
+    """Model for logging in a user."""
+
+    username: str
+    email: str
     password: str
-    first_name: str
-    last_name: str
-    image: str
-    email_subscribe: bool
-
-
-class DeleteUserResponse(BaseModel):
-    """Model for response to user deletion."""
-
-    detail: str
-    status: bool
 
 
 class UserExists(BaseModel):
+    """Model for checking if a user exists."""
     is_username: bool = False
-    is_email: bool =False
+    is_email: bool = False
+
+
+class TokenInfo(BaseModel):
+    access_token: str
+    token_type: str

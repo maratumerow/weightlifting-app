@@ -13,6 +13,7 @@ uvicorn = "^0.29.0"
 python-multipart = "^0.0.9"
 pydantic = {extras = ["email"], version = "^2.7.0"}
 pydantic-settings = "^2.2.1"
+pyjwt = {extras = ["crypto"], version = "^2.8.0"}
 
 
 [tool.poetry.group.dev.dependencies]

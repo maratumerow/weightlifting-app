@@ -1,15 +1,14 @@
-from app.api.schemas.user import UserCreateApi
 from app.data.repositories.user import UserRepository
 from app.exceptions.exc_400 import ObjectsAlreadyCreated
-from app.schemas.user import User
+from app.schemas.user import User, UserCreate
 from app.services.gateways.email import push_user_email_service
-from app.tools.security import generate_password_digest
+from app.tools.security import get_password_hash
 
 
 def create_user_service(
-    user: UserCreateApi, user_repo: UserRepository
+    user: UserCreate, user_repo: UserRepository
 ) -> User:
-    """Сервис создания пользователя"""
+    """Create a user."""
 
     user = user.model_validate(user)
 
@@ -17,7 +16,7 @@ def create_user_service(
         username=user.username,
         email=user.email,
     )
-    error_msgs = []
+    error_msgs: list[str] = []
     if check_user.is_email:
         error_msgs.append("User with this email already registered")
     if check_user.is_username:
@@ -26,7 +25,7 @@ def create_user_service(
     if error_msgs:
         raise ObjectsAlreadyCreated(detail=error_msgs)
 
-    user.password = generate_password_digest(user.password).hex()
+    user.password = get_password_hash(user.password)
     user = user_repo.create_user(user=user)
     push_user_email_service(email=user.email)
     return user

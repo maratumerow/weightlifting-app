@@ -3,11 +3,12 @@ from sqlalchemy.orm import Session
 
 from app.data.repositories.user import UserRepository
 from app.data.session import SessionLocal
+from typing import Generator
 
 router = APIRouter()
 
 
-def get_db() -> SessionLocal: # type: ignore
+def get_db() -> Generator[Session, None, None]:
     """
     Provides a database session to the dependent functions
     using FastAPI's dependency injection.
