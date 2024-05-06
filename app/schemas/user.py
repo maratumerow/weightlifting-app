@@ -27,6 +27,7 @@ class User(UserBase):
     last_name: str
     image: str
     email_subscribe: bool
+    is_active: bool
     updated_at: datetime.datetime
 
 
@@ -47,10 +48,18 @@ class UserLogin(BaseModel):
 
 class UserExists(BaseModel):
     """Model for checking if a user exists."""
+
     is_username: bool = False
     is_email: bool = False
 
 
 class TokenInfo(BaseModel):
+    """Model for token information."""
+
     access_token: str
-    token_type: str
+    refresh_token: str
+
+
+class TokenPayload(BaseModel):
+    sub: str
+    exp: int

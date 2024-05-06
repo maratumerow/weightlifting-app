@@ -2,12 +2,9 @@ from app.data.repositories.user import UserRepository
 from app.exceptions.exc_400 import ObjectsAlreadyCreated
 from app.schemas.user import User, UserCreate
 from app.services.gateways.email import push_user_email_service
-from app.tools.security import get_hashed_password
 
 
-def create_user_service(
-    user: UserCreate, user_repo: UserRepository
-) -> User:
+def create_user_service(user: UserCreate, user_repo: UserRepository) -> User:
     """Create a user."""
 
     user = user.model_validate(user)
@@ -25,7 +22,6 @@ def create_user_service(
     if error_msgs:
         raise ObjectsAlreadyCreated(detail=error_msgs)
 
-    user.password = get_hashed_password(user.password)
     user = user_repo.create_user(user=user)
     push_user_email_service(email=user.email)
     return user

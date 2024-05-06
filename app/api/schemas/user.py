@@ -1,7 +1,7 @@
 from pydantic import EmailStr, StringConstraints
 from typing_extensions import Annotated
 
-from app.schemas.user import UserCreate, UserLogin, UserUpdate
+from app.schemas.user import UserBase, UserCreate, UserUpdate
 
 
 class UserCreateApi(UserCreate):
@@ -23,8 +23,7 @@ class UserUpdateApi(UserUpdate):
     )
 
 
-class UserLoginApi(UserLogin):
-    """User login schema."""
+class UserApi(UserBase):
 
-    username: str
-    email: str
+    email: EmailStr
+    username: Annotated[str, StringConstraints(min_length=2, max_length=50)]

@@ -82,3 +82,4 @@ todo_and_questions.txt
 # certificates for jwt
 jwt-private.pem
 jwt-public.pem
+.DS_Store

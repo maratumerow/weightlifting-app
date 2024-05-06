@@ -1,26 +1,39 @@
 from fastapi import APIRouter, Depends, Response
+from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.dependencies import user_repo_dep
-from app.api.schemas.user import UserCreateApi, UserLoginApi, UserUpdateApi
+from app.api.schemas.user import UserApi, UserCreateApi, UserUpdateApi
 from app.data.repositories.user import UserRepository
 from app.schemas.user import TokenInfo, User, UserUpdate
 from app.services.users import (create_user_service, delete_user_service,
-                                get_token_service, get_user_service,
-                                get_users_service, update_user_service)
-from app.tools.security import validate_auth_user
+                                get_current_and_active_user, get_user_service,
+                                get_users_service, login_service,
+                                update_user_service)
 
 router = APIRouter(tags=["Users"])
+
+
+@router.get(
+    "/me/",
+    summary="Get details of currently logged in user",
+    response_model=User,
+)
+def get_me(
+    user: UserApi = Depends(get_current_and_active_user),
+):
+    return user
 
 
 @router.post(
     "/login/",
     response_model=TokenInfo,
-    summary="Login a user",
+    summary="Create access and refresh tokens for user",
 )
 def login(
-    user: UserLoginApi = Depends(validate_auth_user),
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    user_repo: UserRepository = Depends(user_repo_dep),
 ):
-    return get_token_service(user)
+    return login_service(form_data=form_data, user_repo=user_repo)
 
 
 @router.post(

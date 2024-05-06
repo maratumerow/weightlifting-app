@@ -1,9 +1,10 @@
+from typing import Generator
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.data.repositories.user import UserRepository
 from app.data.session import SessionLocal
-from typing import Generator
 
 router = APIRouter()
 
