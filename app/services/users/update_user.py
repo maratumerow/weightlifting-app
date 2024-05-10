@@ -1,6 +1,5 @@
-from fastapi import HTTPException
-
 from app.data.repositories.user import UserRepository
+from app.exceptions.exc_404 import ObjectsNotFoundException
 from app.schemas.user import User, UserUpdate
 
 
@@ -11,7 +10,7 @@ def update_user_service(
 
     db_user = user_repo.get_user_by_id(user_id=user_id)
     if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise ObjectsNotFoundException("User not found")
 
     user_update_data = user_update_data.model_validate(user_update_data)
 

@@ -1,11 +1,9 @@
-from fastapi.exceptions import HTTPException
+from fastapi import HTTPException
 
 
-class ObjectsAlreadyCreated(HTTPException):
-    """Exception for when an object is already created."""
-
-    status_code = 400
-    detail = "Object already created"
+class InvalidTokenException(HTTPException):
+    status_code = 403
+    detail = "Invalid token"
 
     def __init__(self, detail: str | list[str] = "", **kwargs):
         detail = detail or self.detail
@@ -15,5 +13,6 @@ class ObjectsAlreadyCreated(HTTPException):
         super().__init__(
             status_code=self.status_code,
             detail=detail,
+            headers={"WWW-Authenticate": "Bearer"},
             **kwargs,
         )

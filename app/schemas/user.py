@@ -51,15 +51,3 @@ class UserExists(BaseModel):
 
     is_username: bool = False
     is_email: bool = False
-
-
-class TokenInfo(BaseModel):
-    """Model for token information."""
-
-    access_token: str
-    refresh_token: str
-
-
-class TokenPayload(BaseModel):
-    sub: str
-    exp: int

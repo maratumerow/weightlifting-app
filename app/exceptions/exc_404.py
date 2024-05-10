@@ -1,11 +1,11 @@
 from fastapi.exceptions import HTTPException
 
 
-class ObjectsAlreadyCreated(HTTPException):
-    """Exception for when an object is already created."""
+class ObjectsNotFoundException(HTTPException):
+    """Exception for when an object is not found."""
 
-    status_code = 400
-    detail = "Object already created"
+    status_code = 404
+    detail = "Object Not Found"
 
     def __init__(self, detail: str | list[str] = "", **kwargs):
         detail = detail or self.detail

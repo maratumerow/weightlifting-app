@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.data.models.user import User
 from app.schemas.user import UserCreate, UserExists, UserUpdate
-from app.tools.security import get_hashed_password
+from app.tools.security import hash_string
 
 
 class UserRepository:
@@ -61,7 +61,7 @@ class UserRepository:
         db_user = User(
             email=user.email,
             username=user.username,
-            password=self.get_hashed_password(user.password),
+            password=self.hash_string(user.password),
         )
 
         self.db.add(db_user)
@@ -72,10 +72,9 @@ class UserRepository:
     def update_user(self, db_user: User, user_update_data: UserUpdate) -> User:
         """Update a user."""
 
-        if user_update_data.first_name:
-            db_user.first_name = user_update_data.first_name
-        if user_update_data.last_name:
-            db_user.last_name = user_update_data.last_name
+        for field, value in user_update_data.model_dump().items():
+            if value is not None:
+                setattr(db_user, field, value)
 
         self.db.commit()
         self.db.refresh(db_user)
@@ -87,7 +86,7 @@ class UserRepository:
         self.db.delete(user)
         self.db.commit()
 
-    def get_hashed_password(self, password: str) -> str:
+    def hash_string(self, password: str) -> str:
         """Get a hashed password."""
 
-        return get_hashed_password(password)
+        return hash_string(password)
