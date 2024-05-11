@@ -13,7 +13,10 @@ uvicorn = "^0.29.0"
 python-multipart = "^0.0.9"
 pydantic = {extras = ["email"], version = "^2.7.0"}
 pydantic-settings = "^2.2.1"
-
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+types-passlib = "^1.7.7.20240327"
+types-python-jose = "^3.3.4.20240106"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"

@@ -1,15 +1,14 @@
-from fastapi import HTTPException
-
 from app.data.repositories.user import UserRepository
+from app.exceptions.exc_404 import ObjectsNotFoundException
 
 
-def delete_user_service(user_id: int, user_repo: UserRepository) -> bool:
-    """Сервис удаления пользователя"""
+def delete_user_service(user_id: int, user_repo: UserRepository) -> None:
+    """Delete a user by ID."""
 
     db_user = user_repo.get_user_by_id(user_id=user_id)
     if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise ObjectsNotFoundException(
+            detail="User Not Found",
+        )
 
-    status = user_repo.delete_user(user=db_user)
-
-    return status
+    user_repo.delete_user(user=db_user)
