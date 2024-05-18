@@ -1,21 +1,17 @@
 from fastapi import APIRouter, Depends, Response
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import EmailStr
 
-from app.api.dependencies.auth import get_current_active_user_dep
+from app.api.dependencies.auth import get_token_subject
 from app.api.dependencies.db import user_repo_dep
-from app.api.schemas.user import UserApi, UserCreateApi, UserUpdateApi
+from app.api.schemas.user import UserCreateApi, UserUpdateApi
 from app.data.repositories.user import UserRepository
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User, UserUpdate
 from app.services.auth import get_authentication_tokens_service
-
-from app.services.users import (
-    create_user_service,
-    delete_user_service,
-    get_user_service,
-    get_users_service,
-    update_user_service,
-)
+from app.services.users import (create_user_service, delete_user_service,
+                                get_user_by_email_service, get_user_service,
+                                get_users_service, update_user_service)
 
 router = APIRouter(tags=["Users"])
 
@@ -26,9 +22,10 @@ router = APIRouter(tags=["Users"])
     response_model=User,
 )
 def get_me(
-    user: UserApi = Depends(get_current_active_user_dep),
+    email: EmailStr = Depends(get_token_subject),
+    user_repo: UserRepository = Depends(user_repo_dep),
 ):
-    return user
+    return get_user_by_email_service(user_email=email, user_repo=user_repo)
 
 
 @router.post(

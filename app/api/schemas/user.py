@@ -23,7 +23,8 @@ class UserUpdateApi(UserUpdate):
     )
 
 
-class UserApi(UserBase):
+class UserResponseApi(UserBase):
+    """User response schema."""
 
     email: EmailStr
     username: Annotated[str, StringConstraints(min_length=2, max_length=50)]

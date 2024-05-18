@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.data.models.user import User
 from app.schemas.user import UserCreate, UserExists, UserUpdate
-from app.tools.security import hash_string
+from app.tools.security import get_hash_string
 
 
 class UserRepository:
@@ -61,7 +61,7 @@ class UserRepository:
         db_user = User(
             email=user.email,
             username=user.username,
-            password=self.hash_string(user.password),
+            password=get_hash_string(user.password),
         )
 
         self.db.add(db_user)
@@ -85,8 +85,3 @@ class UserRepository:
 
         self.db.delete(user)
         self.db.commit()
-
-    def hash_string(self, password: str) -> str:
-        """Get a hashed password."""
-
-        return hash_string(password)

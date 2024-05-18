@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class TokenInfo(BaseModel):
@@ -11,5 +11,5 @@ class TokenInfo(BaseModel):
 class TokenPayload(BaseModel):
     """Model for token payload."""
     
-    sub: str
+    sub: EmailStr
     exp: int

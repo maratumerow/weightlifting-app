@@ -1,7 +1,7 @@
 from app.constants import password_context
 
 
-def hash_string(password: str) -> str:
+def get_hash_string(password: str) -> str:
     """Hash a password using bcrypt."""
 
     return password_context.hash(password)

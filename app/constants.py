@@ -4,7 +4,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel
 
 
-class UserGroupType(str, Enum):
+class UserGroup(str, Enum):
     """
     Enum representing user group types such as 'user', 'admin', 'moderator'.
     """

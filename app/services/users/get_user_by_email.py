@@ -18,4 +18,3 @@ def get_user_by_email_service(
             detail="User with this email is not active"
         )
     return user
-

@@ -1,2 +1,1 @@
-from .get_authentication_tokens_service import \
-    get_authentication_tokens_service
+from .get_authentication_tokens import get_authentication_tokens_service
