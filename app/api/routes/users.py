@@ -28,6 +28,7 @@ def get_me(
     return get_user_by_email_service(user_email=email, user_repo=user_repo)
 
 
+
 @router.post(
     "/login/",
     response_model=TokenInfo,
@@ -40,7 +41,6 @@ def login(
     return get_authentication_tokens_service(
         form_data=form_data, user_repo=user_repo
     )
-
 
 @router.post(
     "/users/register/",
