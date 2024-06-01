@@ -75,11 +75,12 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
-.idea
-todo_and_questions.txt
-
 # certificates for jwt
 jwt-private.pem
 jwt-public.pem
+
+
+.idea
 .DS_Store
+.vscode/
+todo_and_questions.txt

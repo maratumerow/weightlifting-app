@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import EmailStr
 
@@ -43,9 +43,10 @@ def login(
 
 
 @router.post(
-    "/users/",
+    "/users/register/",
     response_model=User,
     summary="Create a new user",
+    status_code=status.HTTP_201_CREATED,
 )
 def create_user_router(
     user: UserCreateApi,
