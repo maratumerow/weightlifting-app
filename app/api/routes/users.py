@@ -17,7 +17,7 @@ router = APIRouter(tags=["Users"])
 
 
 @router.get(
-    "/me/",
+    "/me",
     summary="Get details of currently logged in user",
     response_model=User,
 )
@@ -28,9 +28,8 @@ def get_me(
     return get_user_by_email_service(user_email=email, user_repo=user_repo)
 
 
-
 @router.post(
-    "/login/",
+    "/login",
     response_model=TokenInfo,
     summary="Create access and refresh tokens for user",
 )
@@ -43,7 +42,7 @@ def login(
     )
 
 @router.post(
-    "/users/register/",
+    "/users/register",
     response_model=User,
     summary="Create a new user",
     status_code=status.HTTP_201_CREATED,
@@ -56,7 +55,7 @@ def create_user_router(
 
 
 @router.get(
-    "/users/",
+    "/users",
     response_model=list[User],
     summary="Get a list of users with optional skipping and limiting",
 )

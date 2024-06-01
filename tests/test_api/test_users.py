@@ -8,7 +8,7 @@ from app.schemas.auth import TokenInfo
 
 class TestUsersAPI:
 
-    LOGIN_URL = "/login/"
+    LOGIN_URL = "/login"
 
     @pytest.mark.parametrize(
         "username,password",
