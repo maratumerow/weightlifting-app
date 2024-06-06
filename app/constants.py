@@ -1,6 +1,5 @@
 from enum import Enum
 
-from passlib.context import CryptContext
 from pydantic import BaseModel
 
 
@@ -24,5 +23,4 @@ class AuthJWT(BaseModel):
     JWT_REFRESH_SECRET_KEY: str = "JWT_REFRESH_SECRET_KEY"
 
 
-password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 auth_jwt = AuthJWT()

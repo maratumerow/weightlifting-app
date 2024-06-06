@@ -1,13 +1,13 @@
-from app.constants import password_context
+import bcrypt
 
 
-def get_hash_string(password: str) -> str:
+def hash_password(password: str) -> str:
     """Hash a password using bcrypt."""
 
-    return password_context.hash(password)
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
-def is_password_valid(password: str, hashed_pass: str) -> bool:
+def verify_password(password: str, hashed_password: str) -> bool:
     """Verify a password against a hashed password."""
 
-    return password_context.verify(password, hashed_pass)
+    return bcrypt.checkpw(password.encode(), hashed_password.encode())
