@@ -5,4 +5,5 @@ from starlette.testclient import TestClient
 
 @fixture
 def http_client(app: FastAPI):
+    """Return a TestClient instance for the FastAPI application."""
     return TestClient(app)

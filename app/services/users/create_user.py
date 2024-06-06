@@ -4,7 +4,9 @@ from app.schemas.user import User, UserCreate
 from app.services.gateways.email import push_user_email_service
 
 
-def create_user_service(user: UserCreate, user_repo: UserRepository) -> User:
+def create_user_service(
+    user: UserCreate, user_repo: UserRepository
+) -> User | None:
     """Create a user."""
 
     user = user.model_validate(user)

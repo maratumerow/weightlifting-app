@@ -6,12 +6,13 @@ import app.api.routes.users
 from app.schemas.auth import TokenInfo
 
 
-class TestUsersAPI:
+class TestLoginUsersAPI:
+    """Test cases for logging in a user."""
 
     LOGIN_URL = "/login"
 
     @pytest.mark.parametrize(
-        "username,password",
+        "username, password",
         [("a", "1234"), ("a", "1")],
     )
     @pytest.mark.parametrize(
@@ -37,14 +38,17 @@ class TestUsersAPI:
         )
         auth_mock = Mock(return_value=login_result)
         monkeypatch.setattr(
-            app.api.routes.users, "get_authentication_tokens_service", auth_mock
+            app.api.routes.users,
+            "get_authentication_tokens_service",
+            auth_mock,
         )
 
         result = http_client.post(
             self.LOGIN_URL,
             data={"username": username, "password": password},
         )
-        res_json = result.json()
+        
+        # res_json = result.json()
 
         assert result.status_code == 200
         auth_mock.assert_called()
@@ -61,14 +65,16 @@ class TestUsersAPI:
     def test_login_invalid(self, http_client, monkeypatch, data):
         auth_mock = Mock()
         monkeypatch.setattr(
-            app.api.routes.users, "get_authentication_tokens_service", auth_mock
+            app.api.routes.users,
+            "get_authentication_tokens_service",
+            auth_mock,
         )
 
         result = http_client.post(
             self.LOGIN_URL,
             data=data,
         )
-        res_json = result.json()
+        # res_json = result.json()
 
         assert result.status_code == 422
         auth_mock.assert_not_called()

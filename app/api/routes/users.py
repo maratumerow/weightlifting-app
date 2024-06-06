@@ -9,9 +9,14 @@ from app.data.repositories.user import UserRepository
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User, UserUpdate
 from app.services.auth import get_authentication_tokens_service
-from app.services.users import (create_user_service, delete_user_service,
-                                get_user_by_email_service, get_user_service,
-                                get_users_service, update_user_service)
+from app.services.users import (
+    create_user_service,
+    delete_user_service,
+    get_user_by_email_service,
+    get_user_service,
+    get_users_service,
+    update_user_service,
+)
 
 router = APIRouter(tags=["Users"])
 
@@ -40,6 +45,7 @@ def login(
     return get_authentication_tokens_service(
         form_data=form_data, user_repo=user_repo
     )
+
 
 @router.post(
     "/users/register",

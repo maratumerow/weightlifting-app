@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from app.api.routes.users import router
 from app.config import AppConfig
 
-pytest_plugins = ("tests.fixtures.clients",)
+pytest_plugins = ("tests.fixtures.clients", "tests.fixtures.user_data")
 
 
 def test_web_app():
