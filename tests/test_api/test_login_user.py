@@ -47,8 +47,6 @@ class TestLoginUsersAPI:
             self.LOGIN_URL,
             data={"username": username, "password": password},
         )
-        
-        # res_json = result.json()
 
         assert result.status_code == 200
         auth_mock.assert_called()

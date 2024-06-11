@@ -24,12 +24,13 @@ class TestGetUsersAPI:
         self,
         http_client,
         mock_get_users_service,
-        user_data_list,
+        get_fake_users,
     ):
         """Test getting all users."""
-
+        
+        users = get_fake_users(10)
         service_response: list[User] = [
-            User(**user_data) for user_data in user_data_list
+            User(**user_data) for user_data in users
         ]
 
         mock_get_users_service.return_value = service_response
@@ -37,6 +38,6 @@ class TestGetUsersAPI:
         result = http_client.get("/users")
 
         assert result.status_code == 200
-        assert len(result.json()) == len(user_data_list)
-        assert result.json() == user_data_list
+        assert len(result.json()) == 10
+        assert result.json() == users
         mock_get_users_service.assert_called()

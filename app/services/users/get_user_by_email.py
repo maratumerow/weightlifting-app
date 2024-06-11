@@ -7,6 +7,7 @@ from app.schemas.user import User
 def get_user_by_email_service(
     user_repo: UserRepository, user_email: str
 ) -> User:
+
     user = user_repo.get_user_by_email(user_email)
 
     if user is None:

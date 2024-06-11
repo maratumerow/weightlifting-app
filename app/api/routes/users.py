@@ -5,13 +5,15 @@ from pydantic import EmailStr
 from app.api.dependencies.auth import get_token_subject
 from app.api.dependencies.db import user_repo_dep
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
+from app.data.repositories.interfaces import IUserRepository
 from app.data.repositories.user import UserRepository
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User, UserUpdate
 from app.services.auth import get_authentication_tokens_service
-from app.services.users import (create_user_service, delete_user_service,
+from app.services.users import (delete_user_service,
                                 get_user_by_email_service, get_user_service,
                                 get_users_service, update_user_service)
+from app.services.users.create_user import UserCreateService
 
 router = APIRouter(tags=["Users"])
 
@@ -50,9 +52,10 @@ def login(
 )
 def create_user_router(
     user: UserCreateApi,
-    user_repo: UserRepository = Depends(user_repo_dep),
+    user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    return create_user_service(user=user, user_repo=user_repo)
+    service = UserCreateService(user_repo=user_repo)
+    return service(user=user)
 
 
 @router.get(

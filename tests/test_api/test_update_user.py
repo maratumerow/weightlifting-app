@@ -24,7 +24,7 @@ class TestUpdateUserApi:
     ):
         """Test updating a user."""
 
-        service_response: UserUpdate = UserUpdate(
+        service_response = UserUpdate(
             first_name=user_data["first_name"],
             last_name=user_data["last_name"],
         )
@@ -99,14 +99,13 @@ class TestUpdateUserApi:
                 "last_name": wrong_data.get("last_name", ""),
             },
         )
-
         assert result.status_code == 422
-        assert "detail" in result.json()
-        errors = result.json()["detail"]
+
+        res_json = result.json()
         assert any(
             error["msg"] == expected_error["msg"]
             and error["loc"] == expected_error["loc"]
-            for error in errors
+            for error in res_json["detail"]
         )
         assert not mock_update_user_service.called
 
