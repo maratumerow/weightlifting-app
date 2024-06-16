@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Any, Callable
 
 import pytest
 from faker import Faker
@@ -21,25 +21,25 @@ def user_data_fabric(faker: Faker):
         }
         user_data.update(kwargs)
         return user_data
-    
+
     return wrap
-        
+
 
 @pytest.fixture
 def user_data(user_data_fabric) -> dict:
     """Return a user data."""
-    
+
     return user_data_fabric()
 
 
 @pytest.fixture
 def get_fake_users(user_data_fabric) -> Callable:
     """Return a list of user data."""
-    
-    def wrap(count =10) -> list[dict[str, Any]]:
+
+    def wrap(count=10) -> list[dict[str, Any]]:
         users = []
         for _ in range(count):
             users.append(user_data_fabric())
         return users
-    
+
     return wrap

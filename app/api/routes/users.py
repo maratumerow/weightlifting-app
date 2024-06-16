@@ -6,14 +6,13 @@ from app.api.dependencies.auth import get_token_subject
 from app.api.dependencies.db import user_repo_dep
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
 from app.data.repositories.interfaces import IUserRepository
-from app.data.repositories.user import UserRepository
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User, UserUpdate
-from app.services.auth import get_authentication_tokens_service
-from app.services.users import (delete_user_service,
-                                get_user_by_email_service, get_user_service,
-                                get_users_service, update_user_service)
-from app.services.users.create_user import UserCreateService
+from app.services.auth.get_authentication_tokens import \
+    GetAuthenticationTokensService
+from app.services.users import (UserCreateService, UserDeleteService,
+                                UserGetByEmailService, UserGetService,
+                                UsersGetService, UserUpdateService)
 
 router = APIRouter(tags=["Users"])
 
@@ -25,9 +24,10 @@ router = APIRouter(tags=["Users"])
 )
 def get_me(
     email: EmailStr = Depends(get_token_subject),
-    user_repo: UserRepository = Depends(user_repo_dep),
+    user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    return get_user_by_email_service(user_email=email, user_repo=user_repo)
+    service = UserGetByEmailService(user_repo=user_repo)
+    return service(user_email=email)
 
 
 @router.post(
@@ -37,11 +37,10 @@ def get_me(
 )
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
-    user_repo: UserRepository = Depends(user_repo_dep),
+    user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    return get_authentication_tokens_service(
-        form_data=form_data, user_repo=user_repo
-    )
+    service = GetAuthenticationTokensService(user_repo=user_repo)
+    return service(form_data=form_data)
 
 
 @router.post(
@@ -66,9 +65,10 @@ def create_user_router(
 def get_users_route(
     skip: int = 0,
     limit: int = 100,
-    user_repo: UserRepository = Depends(user_repo_dep),
+    user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    return get_users_service(skip=skip, limit=limit, user_repo=user_repo)
+    service = UsersGetService(user_repo)
+    return service(skip=skip, limit=limit)
 
 
 @router.get(
@@ -78,9 +78,10 @@ def get_users_route(
 )
 def get_user_route(
     user_id: int,
-    user_repo: UserRepository = Depends(user_repo_dep),
+    user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    return get_user_service(user_id=user_id, user_repo=user_repo)
+    service = UserGetService(user_repo)
+    return service(user_id=user_id)
 
 
 @router.put(
@@ -91,11 +92,10 @@ def get_user_route(
 def update_user_router(
     user_id: int,
     user_update_data: UserUpdateApi,
-    user_repo: UserRepository = Depends(user_repo_dep),
+    user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    return update_user_service(
-        user_id=user_id, user_update_data=user_update_data, user_repo=user_repo
-    )
+    service = UserUpdateService(user_repo)
+    return service(user_id=user_id, user_update_data=user_update_data)
 
 
 @router.delete(
@@ -109,7 +109,8 @@ def update_user_router(
 )
 def delete_user_router(
     user_id: int,
-    user_repo: UserRepository = Depends(user_repo_dep),
+    user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    delete_user_service(user_id=user_id, user_repo=user_repo)
+    service = UserDeleteService(user_repo=user_repo)
+    service(user_id=user_id)
     return Response(status_code=204)

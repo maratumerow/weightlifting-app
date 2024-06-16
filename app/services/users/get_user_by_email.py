@@ -1,21 +1,21 @@
-from app.data.repositories.user import UserRepository
+from app.data.models.user import User
 from app.exceptions.exc_403 import ObjectsForbiddenException
 from app.exceptions.exc_404 import ObjectsNotFoundException
-from app.schemas.user import User
+from app.services.interfaces.users import IUserGetByEmailService
 
 
-def get_user_by_email_service(
-    user_repo: UserRepository, user_email: str
-) -> User:
+class UserGetByEmailService(IUserGetByEmailService):
+    """Service for getting a user by email."""
 
-    user = user_repo.get_user_by_email(user_email)
+    def __call__(self, user_email: str) -> User | None:
+        user = self.user_repo.get_user_by_email(user_email)
 
-    if user is None:
-        raise ObjectsNotFoundException(
-            detail="User with this email does not exist"
-        )
-    if not user.is_active:
-        raise ObjectsForbiddenException(
-            detail="User with this email is not active"
-        )
-    return user
+        if user is None:
+            raise ObjectsNotFoundException(
+                detail="User with this email does not exist"
+            )
+        if not user.is_active:
+            raise ObjectsForbiddenException(
+                detail="User with this email is not active"
+            )
+        return user

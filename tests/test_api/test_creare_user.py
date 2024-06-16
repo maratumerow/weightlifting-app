@@ -1,16 +1,22 @@
+# type: ignore
 from unittest.mock import Mock
 
 import pytest
 
 import app.api.routes.users
-from app.schemas.user import User
+from app.data.models.user import User
 
 
 @pytest.fixture
 def mock_create_user_service(monkeypatch) -> Mock:
     mock_service = Mock()
+
+    mock_cls = Mock(return_value=mock_service)
+
     monkeypatch.setattr(
-        app.api.routes.users, "create_user_service", mock_service
+        app.api.routes.users,
+        "UserCreateService",
+        mock_cls,
     )
     return mock_service
 

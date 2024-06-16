@@ -1,9 +1,24 @@
+# type: ignore
 from unittest.mock import Mock
 
 import pytest
 
 import app.api.routes.users
 from app.schemas.auth import TokenInfo
+
+
+@pytest.fixture
+def mock_auth_service(monkeypatch) -> Mock:
+    mock_service = Mock()
+
+    mock_cls = Mock(return_value=mock_service)
+
+    monkeypatch.setattr(
+        app.api.routes.users,
+        "GetAuthenticationTokensService",
+        mock_cls,
+    )
+    return mock_service
 
 
 class TestLoginUsersAPI:
@@ -26,22 +41,17 @@ class TestLoginUsersAPI:
     def test_login_valid(
         self,
         http_client,
-        monkeypatch,
         access_token,
         refresh_token,
         username,
         password,
+        mock_auth_service,
     ):
         login_result = TokenInfo(
             access_token=access_token,
             refresh_token=refresh_token,
         )
-        auth_mock = Mock(return_value=login_result)
-        monkeypatch.setattr(
-            app.api.routes.users,
-            "get_authentication_tokens_service",
-            auth_mock,
-        )
+        mock_auth_service.return_value = login_result
 
         result = http_client.post(
             self.LOGIN_URL,
@@ -49,7 +59,7 @@ class TestLoginUsersAPI:
         )
 
         assert result.status_code == 200
-        auth_mock.assert_called()
+        mock_auth_service.assert_called()
         assert TokenInfo(**result.json()) == login_result
 
     @pytest.mark.parametrize(
@@ -60,13 +70,10 @@ class TestLoginUsersAPI:
             {"password": "a"},
         ],
     )
-    def test_login_invalid(self, http_client, monkeypatch, data):
-        auth_mock = Mock()
-        monkeypatch.setattr(
-            app.api.routes.users,
-            "get_authentication_tokens_service",
-            auth_mock,
-        )
+    def test_login_invalid(
+        self, http_client, mock_auth_service, data
+    ):
+        mock_auth_service.return_value = None
 
         result = http_client.post(
             self.LOGIN_URL,
@@ -75,4 +82,4 @@ class TestLoginUsersAPI:
         # res_json = result.json()
 
         assert result.status_code == 422
-        auth_mock.assert_not_called()
+        mock_auth_service.assert_not_called()

@@ -1,3 +1,4 @@
+# type: ignore
 from unittest.mock import Mock
 
 import pytest
@@ -9,8 +10,9 @@ from app.exceptions.exc_404 import ObjectsNotFoundException
 @pytest.fixture
 def mock_delete_user_service(monkeypatch) -> Mock:
     mock_service = Mock()
+    mock_cls = Mock(return_value=mock_service)
     monkeypatch.setattr(
-        app.api.routes.users, "delete_user_service", mock_service
+        app.api.routes.users, "UserDeleteService", mock_cls
     )
     return mock_service
 

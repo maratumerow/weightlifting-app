@@ -1,3 +1,4 @@
+# type: ignore
 from unittest.mock import Mock
 
 import pytest
@@ -9,10 +10,13 @@ from app.schemas.user import User
 @pytest.fixture
 def mock_get_users_service(monkeypatch) -> Mock:
     mock_service = Mock()
+
+    mock_cls = Mock(return_value=mock_service)
+
     monkeypatch.setattr(
         app.api.routes.users,
-        "get_users_service",
-        mock_service,
+        "UsersGetService",
+        mock_cls,
     )
     return mock_service
 
@@ -27,7 +31,7 @@ class TestGetUsersAPI:
         get_fake_users,
     ):
         """Test getting all users."""
-        
+
         users = get_fake_users(10)
         service_response: list[User] = [
             User(**user_data) for user_data in users

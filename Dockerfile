@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.12-alpine
 
 WORKDIR backend
 
@@ -13,10 +13,3 @@ RUN pip install poetry
 RUN poetry install --only main --no-interaction
 
 CMD ["bash", "-c", "uvicorn app.main:app"]
-
-
-
-
-
-
-

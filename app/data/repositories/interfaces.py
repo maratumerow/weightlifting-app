@@ -2,20 +2,23 @@ import abc
 
 from sqlalchemy.orm import Session
 
-from app.schemas.user import UserCreate, UserUpdate, User, UserExists
+from app.data.models.user import User
+from app.schemas.user import UserCreate, UserExists, UserUpdate
 
 
 class IUserRepository(abc.ABC):
+    """Interface for user repository."""
+
     def __init__(self, db: Session):
         self.db = db
 
     @abc.abstractmethod
     def get_user_by_id(self, user_id: int) -> User | None:
-        ...
+        """Get a user by ID."""
 
     @abc.abstractmethod
     def get_user_by_email(self, email: str) -> User | None:
-        ...
+        """Get a user by email."""
 
     @abc.abstractmethod
     def get_user_by_username(self, username: str) -> User | None:
@@ -23,7 +26,7 @@ class IUserRepository(abc.ABC):
 
     @abc.abstractmethod
     def get_username_and_email_exists(
-            self, username: str, email: str
+        self, username: str, email: str
     ) -> UserExists:
         """Check if a user with the given username and email exists."""
 
@@ -36,7 +39,9 @@ class IUserRepository(abc.ABC):
         """Create a user."""
 
     @abc.abstractmethod
-    def update_user(self, db_user: User, user_update_data: UserUpdate) -> User:
+    def update_user(
+        self, db_user: User, user_update_data: UserUpdate
+    ) -> User | None:
         """Update a user."""
 
     @abc.abstractmethod

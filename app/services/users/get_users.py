@@ -1,9 +1,11 @@
-from app.data.repositories.user import UserRepository
+from app.data.models.user import User
+from app.services.interfaces.users import IUsersGetService
 
 
-def get_users_service(
-    user_repo: UserRepository, skip: int = 0, limit: int = 100
-):
-    """Get a list of users with optional skipping and limiting."""
+class UsersGetService(IUsersGetService):
+    """Service to get users."""
 
-    return user_repo.get_users(skip=skip, limit=limit)
+    def __call__(self, skip: int, limit: int) -> list[User]:
+        """Get a list of users with optional skipping and limiting."""
+
+        return self.user_repo.get_users(skip=skip, limit=limit)

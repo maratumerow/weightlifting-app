@@ -1,14 +1,17 @@
-from app.data.repositories.user import UserRepository
 from app.exceptions.exc_404 import ObjectsNotFoundException
+from app.services.interfaces.users import IUserDeleteService
 
 
-def delete_user_service(user_id: int, user_repo: UserRepository) -> None:
-    """Delete a user by ID."""
+class UserDeleteService(IUserDeleteService):
+    """Service for deleting a user."""
 
-    db_user = user_repo.get_user_by_id(user_id=user_id)
-    if not db_user:
-        raise ObjectsNotFoundException(
-            detail="User Not Found",
-        )
+    def __call__(self, user_id: int) -> None:
+        """Delete a user by ID."""
 
-    user_repo.delete_user(user=db_user)
+        db_user = self.user_repo.get_user_by_id(user_id=user_id)
+        if not db_user:
+            raise ObjectsNotFoundException(
+                detail="User Not Found",
+            )
+
+        self.user_repo.delete_user(user=db_user)

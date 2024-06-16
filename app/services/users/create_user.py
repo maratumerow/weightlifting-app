@@ -1,10 +1,13 @@
+from app.data.models.user import User
 from app.exceptions.exc_400 import ObjectsAlreadyCreated
-from app.schemas.user import User, UserCreate
+from app.schemas.user import UserCreate
 from app.services.gateways.email import push_user_email_service
 from app.services.interfaces.users import IUserCreateService
 
 
 class UserCreateService(IUserCreateService):
+    """Service for creating a user."""
+
     def __call__(self, user: UserCreate) -> User | None:
 
         user = user.model_validate(user)
@@ -25,4 +28,3 @@ class UserCreateService(IUserCreateService):
         user = self.user_repo.create_user(user=user)
         push_user_email_service(email=user.email)
         return user
-

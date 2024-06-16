@@ -1,5 +1,4 @@
 from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
@@ -8,6 +7,7 @@ from app.tools.security import hash_password
 
 
 class UserRepository(IUserRepository):
+    """User repository."""
 
     def get_user_by_id(self, user_id: int) -> User | None:
         return self.db.query(User).filter(User.id == user_id).first()
@@ -19,21 +19,21 @@ class UserRepository(IUserRepository):
         return self.db.query(User).filter(User.username == username).first()
 
     def get_username_and_email_exists(
-            self, username: str, email: str
+        self, username: str, email: str
     ) -> UserExists:
-        subq_username=(
+        subq_username = (
             select(User.username).where(User.username == username)
         ).exists()
         subq_email = (select(User.email).where(User.email == email)).exists()
 
-        result=self.db.execute(
+        result = self.db.execute(
             select(
                 subq_username.label("u_name"), subq_email.label("u_email")
             ).limit(1),
         ).first()
 
-        is_username=result.u_name if result else False
-        is_email=result.u_email if result else False
+        is_username = result.u_name if result else False
+        is_email = result.u_email if result else False
 
         return UserExists(
             is_username=is_username,
@@ -44,7 +44,7 @@ class UserRepository(IUserRepository):
         return self.db.query(User).offset(skip).limit(limit).all()
 
     def create_user(self, user: UserCreate) -> User:
-        db_user=User(
+        db_user = User(
             email=user.email,
             username=user.username,
             password=hash_password(user.password),
