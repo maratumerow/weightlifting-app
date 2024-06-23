@@ -5,12 +5,13 @@ WORKDIR /app
 RUN pip install --upgrade pip && pip install poetry
 
 COPY pyproject.toml poetry.lock /app/
+COPY app /app/app
 
 RUN poetry config virtualenvs.create false \
     && poetry install --no-dev --no-interaction --no-root
 
-COPY app /app/app
+ENV PORT=8000
 
-RUN poetry install --no-dev
+EXPOSE $PORT
 
-CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "poetry run uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
