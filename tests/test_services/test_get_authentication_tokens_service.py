@@ -39,3 +39,21 @@ class TestGetAuthenticationTokensService:
                     username="username", password="password"
                 )
             )
+
+    def test_success(self):
+        password = "test".encode()
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(password, salt)
+        fake_user = Mock(
+            password=hashed_password.decode(),
+            username="username",
+            email="email",
+        )
+        user_repo = Mock(get_user_by_username=Mock(return_value=fake_user))
+        result = GetAuthenticationTokensService(user_repo=user_repo)(
+            form_data=OAuth2PasswordRequestForm(
+                username="username", password="test"
+            )
+        )
+        assert result.access_token
+        assert result.refresh_token
