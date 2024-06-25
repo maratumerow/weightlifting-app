@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -14,7 +14,7 @@ def create_access_token(
     subject: str, expire_timedelta: timedelta | None = None
 ) -> str:
     """Create an access token for a user."""
-    
+
     return create_token(subject, auth_jwt.JWT_SECRET_KEY, expire_timedelta)
 
 
@@ -39,7 +39,7 @@ def create_token(
 ) -> str:
     """Create a token for a user."""
 
-    now = datetime.utcnow()  # type: ignore
+    now = datetime.now(timezone.utc)
     expire = now + (
         expire_timedelta or timedelta(minutes=default_expire_minutes)
     )
