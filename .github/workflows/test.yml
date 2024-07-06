@@ -1,8 +1,8 @@
-name: tests
+name: test
 on: [push, pull_request]
 
 jobs:
-  testing:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: checkout 🚀

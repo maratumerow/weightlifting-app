@@ -2,9 +2,10 @@ name: deploy
 on:
   push:
   workflow_run:
-    workflows: [tests]
+    workflows: [test]
     types:
       - completed
+    branches: [dev]
 
 jobs:
   deploy:
