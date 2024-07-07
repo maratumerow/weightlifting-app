@@ -3,6 +3,7 @@ import abc
 from sqlalchemy.orm import Session
 
 from app.data.models.user import User
+from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate, UserExists, UserUpdate
 
 
@@ -17,7 +18,7 @@ class IUserRepository(abc.ABC):
         """Get a user by ID."""
 
     @abc.abstractmethod
-    def get_user_by_email(self, email: str) -> User | None:
+    def get_user_by_email(self, email: str) -> UserSchema | None:
         """Get a user by email."""
 
     @abc.abstractmethod
@@ -31,19 +32,19 @@ class IUserRepository(abc.ABC):
         """Check if a user with the given username and email exists."""
 
     @abc.abstractmethod
-    def get_users(self, skip: int = 0, limit: int = 100) -> list[User]:
+    def get_users(self, skip: int = 0, limit: int = 100) -> list[UserSchema]:
         """Get a list of users with optional skipping and limiting."""
 
     @abc.abstractmethod
-    def create_user(self, user: UserCreate) -> User:
+    def create_user(self, user: UserCreate) -> UserSchema:
         """Create a user."""
 
     @abc.abstractmethod
     def update_user(
         self, db_user: User, user_update_data: UserUpdate
-    ) -> User | None:
+    ) -> UserSchema | None:
         """Update a user."""
 
     @abc.abstractmethod
-    def delete_user(self, user: User) -> None:
+    def delete_user(self, user: UserSchema) -> None:
         """Delete a user."""

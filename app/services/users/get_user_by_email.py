@@ -1,4 +1,4 @@
-from app.data.models.user import User
+from app.schemas.user import User as UserSchema
 from app.exceptions.exc_403 import ObjectsForbiddenException
 from app.exceptions.exc_404 import ObjectsNotFoundException
 from app.services.interfaces.users import IUserGetByEmailService
@@ -7,7 +7,7 @@ from app.services.interfaces.users import IUserGetByEmailService
 class UserGetByEmailService(IUserGetByEmailService):
     """Service for getting a user by email."""
 
-    def __call__(self, user_email: str) -> User | None:
+    def __call__(self, user_email: str) -> UserSchema | None:
         user = self.user_repo.get_user_by_email(user_email)
 
         if user is None:

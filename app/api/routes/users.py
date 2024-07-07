@@ -7,12 +7,18 @@ from app.api.dependencies.db import user_repo_dep
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
 from app.data.repositories.interfaces import IUserRepository
 from app.schemas.auth import TokenInfo
-from app.schemas.user import User, UserUpdate
-from app.services.auth.get_authentication_tokens import \
-    GetAuthenticationTokensService
-from app.services.users import (UserCreateService, UserDeleteService,
-                                UserGetByEmailService, UserGetService,
-                                UsersGetService, UserUpdateService)
+from app.schemas.user import User, UserCreate, UserUpdate
+from app.services.auth.get_authentication_tokens import (
+    GetAuthenticationTokensService,
+)
+from app.services.users import (
+    UserCreateService,
+    UserDeleteService,
+    UserGetByEmailService,
+    UserGetService,
+    UsersGetService,
+    UserUpdateService,
+)
 
 router = APIRouter(tags=["Users"])
 
@@ -54,7 +60,7 @@ def create_user_router(
     user_repo: IUserRepository = Depends(user_repo_dep),
 ):
     service = UserCreateService(user_repo=user_repo)
-    return service(user=user)
+    return service(user=UserCreate.model_validate(user, from_attributes=True))
 
 
 @router.get(
@@ -95,7 +101,12 @@ def update_user_router(
     user_repo: IUserRepository = Depends(user_repo_dep),
 ):
     service = UserUpdateService(user_repo)
-    return service(user_id=user_id, user_update_data=user_update_data)
+    return service(
+        user_id=user_id,
+        user_update_data=UserUpdate.model_validate(
+            user_update_data, from_attributes=True
+        ),
+    )
 
 
 @router.delete(

@@ -2,9 +2,9 @@ import abc
 
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
 from app.schemas.auth import TokenInfo
+from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate, UserUpdate
 
 
@@ -14,7 +14,7 @@ class IUserCreateService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(self, user: UserCreate) -> User | None:
+    def __call__(self, user: UserCreate) -> UserSchema | None:
         """Create a user"""
 
 
@@ -24,7 +24,7 @@ class IUsersGetService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(self, skip: int, limit: int) -> list[User] | None:
+    def __call__(self, skip: int, limit: int) -> list[UserSchema] | None:
         """Get a list of users with optional skipping and limiting."""
 
 
@@ -36,7 +36,7 @@ class IUserUpdateService(abc.ABC):
 
     def __call__(
         self, user_id: int, user_update_data: UserUpdate
-    ) -> User | None:
+    ) -> UserSchema | None:
         """Update a user by ID"""
 
 
@@ -46,7 +46,7 @@ class IUserGetService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(self, user_id: int) -> User | None:
+    def __call__(self, user_id: int) -> UserSchema | None:
         """Get a user by ID"""
 
 
@@ -78,5 +78,5 @@ class IUserGetByEmailService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(self, user_email: str) -> User | None:
+    def __call__(self, user_email: str) -> UserSchema | None:
         """Get a user by email."""
