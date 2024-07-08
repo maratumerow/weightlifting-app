@@ -1,5 +1,6 @@
 from app.exceptions.exc_404 import ObjectsNotFoundException
-from app.schemas.user import UserUpdate, User as UserSchema
+from app.schemas.user import User as UserSchema
+from app.schemas.user import UserUpdate
 from app.services.interfaces.users import IUserUpdateService
 
 

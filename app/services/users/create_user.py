@@ -1,5 +1,6 @@
 from app.exceptions.exc_400 import ObjectsAlreadyCreated
-from app.schemas.user import UserCreate, User as UserSchema
+from app.schemas.user import User as UserSchema
+from app.schemas.user import UserCreate
 from app.services.gateways.email import push_user_email_service
 from app.services.interfaces.users import IUserCreateService
 

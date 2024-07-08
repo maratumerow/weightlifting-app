@@ -5,7 +5,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
 from app.schemas.auth import TokenInfo
-from app.schemas.user import UserCreate, UserUpdate, User as UserSchema
+from app.schemas.user import User as UserSchema
+from app.schemas.user import UserCreate, UserUpdate
 
 
 class IUserCreateService(abc.ABC):

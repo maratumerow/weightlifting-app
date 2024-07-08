@@ -1,5 +1,5 @@
-from app.schemas.user import User as UserSchema
 from app.exceptions.exc_404 import ObjectsNotFoundException
+from app.schemas.user import User as UserSchema
 from app.services.interfaces.users import IUserGetService
 
 

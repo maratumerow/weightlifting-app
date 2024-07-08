@@ -3,12 +3,8 @@ import abc
 from sqlalchemy.orm import Session
 
 from app.data.models.user import User
-from app.schemas.user import (
-    UserCreate,
-    UserExists,
-    UserUpdate,
-    User as UserSchema,
-)
+from app.schemas.user import User as UserSchema
+from app.schemas.user import UserCreate, UserExists, UserUpdate
 
 
 class IUserRepository(abc.ABC):

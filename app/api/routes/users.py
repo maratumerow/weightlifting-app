@@ -7,18 +7,13 @@ from app.api.dependencies.db import user_repo_dep
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
 from app.data.repositories.interfaces import IUserRepository
 from app.schemas.auth import TokenInfo
-from app.schemas.user import User as UserSchema, UserUpdate, UserCreate
-from app.services.auth.get_authentication_tokens import (
-    GetAuthenticationTokensService,
-)
-from app.services.users import (
-    UserCreateService,
-    UserDeleteService,
-    UserGetByEmailService,
-    UserGetService,
-    UsersGetService,
-    UserUpdateService,
-)
+from app.schemas.user import User as UserSchema
+from app.schemas.user import UserCreate, UserUpdate
+from app.services.auth.get_authentication_tokens import \
+    GetAuthenticationTokensService
+from app.services.users import (UserCreateService, UserDeleteService,
+                                UserGetByEmailService, UserGetService,
+                                UsersGetService, UserUpdateService)
 
 router = APIRouter(tags=["Users"])
 
