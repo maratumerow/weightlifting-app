@@ -2,7 +2,7 @@ name: deploy
 on:
   push:
   workflow_run:
-    workflows: ["tests"]
+    workflows: ["tests", "build"]
     types:
       - completed
 
