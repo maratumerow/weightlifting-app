@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 
 import app.api.routes.users
-from app.schemas.user import User
+from app.schemas.user import User as UserSchema
 
 
 @pytest.fixture
@@ -33,8 +33,8 @@ class TestGetUsersAPI:
         """Test getting all users."""
 
         users = get_fake_users(10)
-        service_response: list[User] = [
-            User(**user_data) for user_data in users
+        service_response: list[UserSchema] = [
+            UserSchema(**user_data) for user_data in users
         ]
 
         mock_get_users_service.return_value = service_response

@@ -2,9 +2,9 @@ import abc
 
 from sqlalchemy.orm import Session
 
-from app.data.models.user import User
 from app.schemas.user import User as UserSchema
-from app.schemas.user import UserCreate, UserExists, UserUpdate
+from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
+                              UserUpdate)
 
 
 class IUserRepository(abc.ABC):
@@ -18,11 +18,11 @@ class IUserRepository(abc.ABC):
         """Get a user by ID."""
 
     @abc.abstractmethod
-    def get_user_by_email(self, email: str) -> User | None:
+    def get_user_by_email(self, email: str) -> UserSchema | None:
         """Get a user by email."""
 
     @abc.abstractmethod
-    def get_user_by_username(self, username: str) -> User | None:
+    def get_user_by_username(self, username: str) -> UserAuthenticate | None:
         """Get a user by username."""
 
     @abc.abstractmethod

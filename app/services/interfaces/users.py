@@ -2,7 +2,6 @@ import abc
 
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User as UserSchema
@@ -79,5 +78,5 @@ class IUserGetByEmailService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(self, user_email: str) -> User | None:
+    def __call__(self, user_email: str) -> UserSchema | None:
         """Get a user by email."""

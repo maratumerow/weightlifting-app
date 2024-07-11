@@ -3,7 +3,8 @@ from sqlalchemy import select
 from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
 from app.schemas.user import User as UserSchema
-from app.schemas.user import UserCreate, UserExists, UserUpdate
+from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
+                              UserUpdate)
 from app.tools.security import hash_password
 
 
@@ -16,14 +17,15 @@ class UserRepository(IUserRepository):
             return None
         return UserSchema.model_validate(user_db, from_attributes=True)
 
-    def get_user_by_email(self, email: str) -> User | None:
+    def get_user_by_email(self, email: str) -> UserSchema | None:
         user = self.db.query(User).filter(User.email == email).first()
         if not user:
             return None
-        return user
+        return UserSchema.model_validate(user, from_attributes=True)
 
-    def get_user_by_username(self, username: str) -> User | None:
-        return self.db.query(User).filter(User.username == username).first()
+    def get_user_by_username(self, username: str) -> UserAuthenticate | None:
+        user = self.db.query(User).filter(User.username == username).first()
+        return UserAuthenticate.model_validate(user, from_attributes=True)
 
     def get_username_and_email_exists(
         self, username: str, email: str
