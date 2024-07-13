@@ -22,6 +22,6 @@ jobs:
             password: ${{ secrets.PASSWORD }}
             port: ${{ secrets.PORT }}
             script: | 
-              docker pull ghcr.io/maratumerow/weightlifting-app:1.0.0
+              docker pull ghcr.io/maratumerow/weightlifting-app:latest
               docker stop $(docker ps -qa)
-              docker run -d -p 80:8000 ghcr.io/maratumerow/weightlifting-app:1.0.0    
+              docker run -d -p 80:8000 ghcr.io/maratumerow/weightlifting-app:latest    
