@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 
 import app.api.routes.users
-from app.data.models.user import User
+from app.schemas.user import User as UserSchema
 
 
 @pytest.fixture
@@ -31,7 +31,7 @@ class TestCreateUsersAPI:
     ):
         """Test creating a user."""
 
-        service_response: User = User(**user_data)
+        service_response: UserSchema = UserSchema(**user_data)
 
         mock_create_user_service.return_value = service_response
 

@@ -5,7 +5,7 @@ import pytest
 
 import app.api.routes.users
 from app.exceptions.exc_404 import ObjectsNotFoundException
-from app.schemas.user import User
+from app.schemas.user import User as UserSchema
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ class TestGetUserAPI:
     ):
         """Test getting a user."""
 
-        service_response: User = User(**user_data)
+        service_response: UserSchema = UserSchema(**user_data)
         mock_get_user_service.return_value = service_response
 
         result = http_client.get(f"/users/{user_data['id']}")
@@ -37,7 +37,7 @@ class TestGetUserAPI:
     ):
         """Test user not found."""
 
-        user: User = User(**user_data)
+        user: UserSchema = UserSchema(**user_data)
 
         mock_get_user_service.side_effect = ObjectsNotFoundException(
             "User not found"

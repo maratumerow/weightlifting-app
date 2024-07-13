@@ -1,0 +1,25 @@
+name: deploy
+on:
+  push:
+  workflow_run:
+    workflows: ["tests", "build"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: >
+      ${{ github.event_name == 'push' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
+    steps:
+      - name: service start
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+            host: ${{ secrets.HOST }}
+            username: ${{ secrets.USERNAME }}
+            password: ${{ secrets.PASSWORD }}
+            port: ${{ secrets.PORT }}
+            script: | 
+              docker pull ghcr.io/maratumerow/weightlifting-app:1.0.0
+              docker stop $(docker ps -qa)
+              docker run -d -p 80:8000 ghcr.io/maratumerow/weightlifting-app:1.0.0    

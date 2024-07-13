@@ -19,6 +19,7 @@ class GetAuthenticationTokensService(IAuthenticationTokensService):
         db_user = self.user_repo.get_user_by_username(
             username=form_data.username
         )
+
         if not db_user or not verify_password(
             password=form_data.password, hashed_password=db_user.password
         ):

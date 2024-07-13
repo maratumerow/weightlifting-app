@@ -16,6 +16,14 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserAuthenticate(BaseModel):
+    """Model for authenticating a user."""
+
+    username: str
+    email: str
+    password: str
+
+
 class User(UserBase):
     """
     Model representing a user.
