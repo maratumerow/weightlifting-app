@@ -1,3 +1,5 @@
+import logging
+
 from app.exceptions.exc_404 import ObjectsNotFoundException
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserUpdate
@@ -16,5 +18,6 @@ class UserUpdateService(IUserUpdateService):
             user_id=user_id, user_update_data=user_update_data
         )
         if not user:
+            logging.error(f"User with ID={user_id} Not Found")
             raise ObjectsNotFoundException("User not found")
         return user

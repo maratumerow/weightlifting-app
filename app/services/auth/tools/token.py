@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta, timezone
 
 from fastapi.security import OAuth2PasswordBearer
@@ -57,10 +58,12 @@ def decode_token(token: str) -> TokenPayload:
         )
         return TokenPayload(**payload)
     except JWTError:
+        logging.error("Could not validate credentials")
         raise InvalidTokenException(detail="Could not validate credentials")
 
 
 def check_token_exp(token_data: TokenPayload) -> None:
     """Check if the token has expired."""
     if datetime.fromtimestamp(token_data.exp) < datetime.now():
+        logging.error("Token has expired")
         raise InvalidTokenException(detail="Token has expired")

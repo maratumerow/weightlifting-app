@@ -1,3 +1,5 @@
+import logging
+
 from app.exceptions.exc_404 import ObjectsNotFoundException
 from app.schemas.user import User as UserSchema
 from app.services.interfaces.users import IUserGetService
@@ -11,5 +13,6 @@ class UserGetService(IUserGetService):
 
         db_user = self.user_repo.get_user_by_id(user_id=user_id)
         if not db_user:
+            logging.error(f"User with ID={user_id} not found")
             raise ObjectsNotFoundException("User not found")
         return db_user

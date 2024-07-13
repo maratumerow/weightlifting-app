@@ -25,6 +25,8 @@ class UserRepository(IUserRepository):
 
     def get_user_by_username(self, username: str) -> UserAuthenticate | None:
         user = self.db.query(User).filter(User.username == username).first()
+        if not user:
+            return None
         return UserAuthenticate.model_validate(user, from_attributes=True)
 
     def get_username_and_email_exists(
