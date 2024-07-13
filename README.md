@@ -2,3 +2,6 @@
 Weightlifting app
 
 
+
+
+![coverage](coverage.svg)

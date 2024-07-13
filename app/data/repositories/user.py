@@ -2,21 +2,30 @@ from sqlalchemy import select
 
 from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
-from app.schemas.user import UserCreate, UserExists, UserUpdate
+from app.schemas.user import User as UserSchema
+from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
+                              UserUpdate)
 from app.tools.security import hash_password
 
 
 class UserRepository(IUserRepository):
     """User repository."""
 
-    def get_user_by_id(self, user_id: int) -> User | None:
-        return self.db.query(User).filter(User.id == user_id).first()
+    def get_user_by_id(self, user_id: int) -> UserSchema | None:
+        user_db = self.db.query(User).filter(User.id == user_id).first()
+        if not user_db:
+            return None
+        return UserSchema.model_validate(user_db, from_attributes=True)
 
-    def get_user_by_email(self, email: str) -> User | None:
-        return self.db.query(User).filter(User.email == email).first()
+    def get_user_by_email(self, email: str) -> UserSchema | None:
+        user = self.db.query(User).filter(User.email == email).first()
+        if not user:
+            return None
+        return UserSchema.model_validate(user, from_attributes=True)
 
-    def get_user_by_username(self, username: str) -> User | None:
-        return self.db.query(User).filter(User.username == username).first()
+    def get_user_by_username(self, username: str) -> UserAuthenticate | None:
+        user = self.db.query(User).filter(User.username == username).first()
+        return UserAuthenticate.model_validate(user, from_attributes=True)
 
     def get_username_and_email_exists(
         self, username: str, email: str
@@ -40,30 +49,44 @@ class UserRepository(IUserRepository):
             is_email=is_email,
         )
 
-    def get_users(self, skip: int = 0, limit: int = 100) -> list[User]:
-        return self.db.query(User).offset(skip).limit(limit).all()
+    def get_users(self, skip: int = 0, limit: int = 100) -> list[UserSchema]:
+        users_db = self.db.query(User).offset(skip).limit(limit).all()
+        return [
+            UserSchema.model_validate(user, from_attributes=True)
+            for user in users_db
+        ]
 
-    def create_user(self, user: UserCreate) -> User:
-        db_user = User(
+    def create_user(self, user: UserCreate) -> UserSchema:
+        user = User(
             email=user.email,
             username=user.username,
             password=hash_password(user.password),
         )
 
-        self.db.add(db_user)
+        self.db.add(user)
         self.db.commit()
-        self.db.refresh(db_user)
-        return db_user
+        self.db.refresh(user)
+        return UserSchema.model_validate(user, from_attributes=True)
 
-    def update_user(self, db_user: User, user_update_data: UserUpdate) -> User:
+    def update_user(
+        self, user_id: int, user_update_data: UserUpdate
+    ) -> UserSchema | None:
+
+        user_db = self.db.query(User).filter(User.id == user_id).first()
+        if not user_db:
+            return None
         for field, value in user_update_data.model_dump().items():
             if value is not None:
-                setattr(db_user, field, value)
+                setattr(user_db, field, value)
 
         self.db.commit()
-        self.db.refresh(db_user)
-        return db_user
+        self.db.refresh(user_db)
+        return UserSchema.model_validate(user_db, from_attributes=True)
 
-    def delete_user(self, user: User) -> None:
-        self.db.delete(user)
-        self.db.commit()
+    def delete_user(self, user_id: int) -> bool:
+        user_db = self.db.query(User).filter(User.id == user_id).first()
+        if user_db:
+            self.db.delete(user_db)
+            self.db.commit()
+            return True
+        return False

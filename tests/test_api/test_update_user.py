@@ -5,7 +5,7 @@ import pytest
 
 import app.api.routes.users
 from app.exceptions.exc_404 import ObjectsNotFoundException
-from app.schemas.user import UserUpdate
+from app.schemas.user import User as UserSchema
 
 
 @pytest.fixture
@@ -27,9 +27,17 @@ class TestUpdateUserApi:
     ):
         """Test updating a user."""
 
-        service_response = UserUpdate(
+        service_response = UserSchema(
+            id=user_data["id"],
             first_name=user_data["first_name"],
             last_name=user_data["last_name"],
+            email=user_data["email"],
+            username=user_data["username"],
+            created_at=user_data["created_at"],
+            updated_at=user_data["updated_at"],
+            image=user_data["image"],
+            email_subscribe=user_data["email_subscribe"],
+            is_active=user_data["is_active"],
         )
 
         mock_update_user_service.return_value = service_response
@@ -43,10 +51,18 @@ class TestUpdateUserApi:
         )
 
         assert result.status_code == 200
-        assert result.json() == {
-            "first_name": user_data["first_name"],
-            "last_name": user_data["last_name"],
-        }
+        response_json = result.json()
+
+        # Convert datetime fields to isoformat for comparison
+        service_response_dict = service_response.model_dump()
+        service_response_dict["created_at"] = service_response_dict[
+            "created_at"
+        ].isoformat()
+        service_response_dict["updated_at"] = service_response_dict[
+            "updated_at"
+        ].isoformat()
+
+        assert response_json == service_response_dict
         assert mock_update_user_service.called
 
     @pytest.mark.parametrize(

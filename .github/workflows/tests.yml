@@ -8,11 +8,17 @@ jobs:
       - name: checkout 🚀
         uses: actions/checkout@v3
       - name: install poetry
+      
         uses: snok/install-poetry@v1
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
       - name: install dependencies
         run: poetry install --no-root
-      - name: testing 🏁
-        run: poetry run pytest
+      - name: Run tests with coverage 🏁
+        run: |
+          poetry run pytest --cov=app tests/
+          if [ -f coverage.svg ]; then
+            rm coverage.svg
+          fi
+          poetry run coverage-badge -o coverage.svg

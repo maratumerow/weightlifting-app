@@ -50,7 +50,6 @@ def create_token(
 
 
 def decode_token(token: str) -> TokenPayload:
-
     """Decode the token and return the payload."""
     try:
         payload = jwt.decode(
@@ -62,7 +61,6 @@ def decode_token(token: str) -> TokenPayload:
 
 
 def check_token_exp(token_data: TokenPayload) -> None:
-
     """Check if the token has expired."""
     if datetime.fromtimestamp(token_data.exp) < datetime.now():
         raise InvalidTokenException(detail="Token has expired")
