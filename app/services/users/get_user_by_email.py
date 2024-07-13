@@ -1,4 +1,5 @@
-# from app.data.models.user import User
+import logging
+
 from app.exceptions.exc_403 import ObjectsForbiddenException
 from app.exceptions.exc_404 import ObjectsNotFoundException
 from app.schemas.user import User as UserSchema
@@ -12,10 +13,12 @@ class UserGetByEmailService(IUserGetByEmailService):
         user = self.user_repo.get_user_by_email(user_email)
 
         if user is None:
+            logging.error(f"User with EMAIL={user_email} not found")
             raise ObjectsNotFoundException(
                 detail="User with this email does not exist"
             )
         if not user.is_active:
+            logging.error(f"User with EMAIL={user_email} is not active")
             raise ObjectsForbiddenException(
                 detail="User with this email is not active"
             )

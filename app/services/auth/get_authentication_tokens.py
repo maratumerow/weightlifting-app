@@ -1,3 +1,5 @@
+import logging
+
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.exceptions.exc_404 import ObjectsNotFoundException
@@ -23,6 +25,9 @@ class GetAuthenticationTokensService(IAuthenticationTokensService):
         if not db_user or not verify_password(
             password=form_data.password, hashed_password=db_user.password
         ):
+            logging.error(
+                f"Incorrect USERNAME={form_data.username} or PASSWORD"
+            )
             raise ObjectsNotFoundException(
                 detail="Incorrect username or password",
             )

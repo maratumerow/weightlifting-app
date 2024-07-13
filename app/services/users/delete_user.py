@@ -16,4 +16,5 @@ class UserDeleteService(IUserDeleteService):
             raise ObjectsNotFoundException(
                 detail="User Not Found",
             )
+        logging.info(f"User with ID={user_id} deleted")
         return None

@@ -1,3 +1,5 @@
+import logging
+
 from app.exceptions.exc_400 import ObjectsAlreadyCreated
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate
@@ -17,12 +19,19 @@ class UserCreateService(IUserCreateService):
         error_msgs: list[str] = []
         if check_user.is_email:
             error_msgs.append("User with this email already registered")
+            logging.error(f"User with EMAIL={user.email} already registered")
         if check_user.is_username:
+            logging.error(
+                f"User with USERNAME={user.username} already registered"
+            )
             error_msgs.append("User with this username already registered")
 
         if error_msgs:
             raise ObjectsAlreadyCreated(detail=error_msgs)
 
         user_in = self.user_repo.create_user(user=user)
+        logging.info(
+            f"User with EMAIL={user_in.email} created. USER_ID={user_in.id}",
+        )
         push_user_email_service(email=user.email)
         return user_in
