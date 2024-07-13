@@ -1,3 +1,5 @@
+import logging
+
 from app.exceptions.exc_404 import ObjectsNotFoundException
 from app.services.interfaces.users import IUserDeleteService
 
@@ -10,6 +12,7 @@ class UserDeleteService(IUserDeleteService):
 
         success = self.user_repo.delete_user(user_id=user_id)
         if not success:
+            logging.error(f"User with ID={user_id} Not Found")
             raise ObjectsNotFoundException(
                 detail="User Not Found",
             )

@@ -1,3 +1,4 @@
+import logging
 from sqlalchemy import select
 
 from app.data.models.user import User
@@ -65,6 +66,7 @@ class UserRepository(IUserRepository):
 
         self.db.add(user)
         self.db.commit()
+        logging.info(f"User with EMAIL={user.email} created, ID={user.id}")
         self.db.refresh(user)
         return UserSchema.model_validate(user, from_attributes=True)
 
