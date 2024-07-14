@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres_weightlifting-app
+      POSTGRES_USER: noname
+      POSTGRES_PASSWORD: noname
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: 8000
+      DATABASE_URL: postgres://noname:noname@db:5432/postgres_weightlifting-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  postgres-data:

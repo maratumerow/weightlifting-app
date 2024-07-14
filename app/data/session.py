@@ -3,13 +3,11 @@ from sqlalchemy.orm import sessionmaker
 
 from app.data.models.base import Base
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///app/data/sql_app.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    # echo=True,
+SQLALCHEMY_DATABASE_URL = (
+    "postgresql://noname:noname@db:5432/postgres_weightlifting-app"
 )
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
