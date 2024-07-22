@@ -1,27 +1,37 @@
-name: deploy
+name: Deploy to AWS EC2
 
 on:
-  push:
-    branches: [main]
   workflow_run:
-    workflows: ["tests", "build"]
+    workflows: ["Build and Push Docker Image"]
     types:
       - completed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: >
-      ${{ github.event_name == 'push' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
     steps:
-      - name: service start
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-            host: ${{ secrets.HOST }}
-            username: ${{ secrets.USERNAME }}
-            password: ${{ secrets.PASSWORD }}
-            port: ${{ secrets.PORT }}
-            script: | 
-              docker pull ghcr.io/maratumerow/weightlifting-app:latest
-              docker stop $(docker ps -qa)
-              docker run -d -p 80:8000 ghcr.io/maratumerow/weightlifting-app:latest    
+          ssh-private-key: ${{ secrets.AWS_EC2_SSH_PRIVATE_KEY }}
+
+      - name: Copy docker-compose.yml to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.yml ${{ secrets.AWS_EC2_SSH_USERNAME }}@${{ secrets.AWS_EC2_IP }}:/home/${{ secrets.AWS_EC2_SSH_USERNAME }}/
+          echo "File copied successfully."
+      
+      - name: Pull the latest image and deploy with Docker Compose
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_EC2_SSH_USERNAME }}@${{ secrets.AWS_EC2_IP }} << 'EOF'
+            cd /home/${{ secrets.AWS_EC2_SSH_USERNAME }}
+            docker compose pull
+            docker compose down
+            docker compose up --build -d
+            echo "Docker commands executed."
+            docker ps
+          EOF

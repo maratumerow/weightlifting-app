@@ -1,6 +1,13 @@
-name: tests
-on: [push, pull_request]
+name: Start testing
 
+on:
+  push:
+    branches:
+      - aws-ec2-deploy
+  pull_request:
+    branches:
+      - aws-ec2-deploy
+      
 jobs:
   testing:
     runs-on: ubuntu-latest
@@ -8,7 +15,6 @@ jobs:
       - name: checkout 🚀
         uses: actions/checkout@v3
       - name: install poetry
-      
         uses: snok/install-poetry@v1
         with:
           virtualenvs-create: true

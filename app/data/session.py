@@ -4,10 +4,11 @@ from sqlalchemy.orm import sessionmaker
 from app.data.models.base import Base
 
 SQLALCHEMY_DATABASE_URL = (
-    "postgresql://noname:noname@db:5432/postgres_weightlifting-app"
+    "postgresql://noname:noname@db:5432/postgres"
 )
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

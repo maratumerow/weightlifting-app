@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:latest
     environment:
-      POSTGRES_DB: postgres_weightlifting-app
+      POSTGRES_DB: postgres
       POSTGRES_USER: noname
       POSTGRES_PASSWORD: noname
     volumes:
@@ -13,14 +13,12 @@ services:
       - "5432:5432"
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/maratumerow/weightlifting-app:latest
     environment:
       PORT: 8000
-      DATABASE_URL: postgres://noname:noname@db:5432/postgres_weightlifting-app
+      DATABASE_URL: postgres://noname:noname@db:5432/postgres
     ports:
-      - "8000:8000"
+      - "80:8000"
     depends_on:
       - db
 
