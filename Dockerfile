@@ -16,4 +16,4 @@ ENV PORT=8000
 
 EXPOSE $PORT
 
-CMD ["sh", "-c", "poetry run uvicorn app.main:app --host 0.0.0.0 --port ${PORT} && poetry run alembic revision --autogenerate -m 'Initial migration' && poetry run alembic upgrade head"]  
+CMD ["sh", "-c", "poetry run alembic upgrade head && poetry run uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --reload"]

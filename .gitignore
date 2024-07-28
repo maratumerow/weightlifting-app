@@ -84,6 +84,3 @@ jwt-public.pem
 .DS_Store
 .vscode/
 todo_and_questions.txt
-
-# Add all files in the "versions" directory
-alembic/versions/*
