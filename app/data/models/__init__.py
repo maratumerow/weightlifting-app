@@ -1,1 +1,2 @@
-from app.data.models import *
+from .base import Base
+from .user import User

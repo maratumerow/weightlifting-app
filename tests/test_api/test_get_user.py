@@ -19,9 +19,7 @@ def mock_get_user_service(monkeypatch) -> Mock:
 class TestGetUserAPI:
     """Test cases for getting a user."""
 
-    def test_get_user_success(
-        self, http_client, mock_get_user_service, user_data
-    ):
+    def test_get_user_success(self, http_client, mock_get_user_service, user_data):
         """Test getting a user."""
 
         service_response: UserSchema = UserSchema(**user_data)
@@ -32,16 +30,12 @@ class TestGetUserAPI:
         assert result.status_code == 200
         assert result.json() == user_data
 
-    def test_get_user_not_found(
-        self, http_client, mock_get_user_service, user_data
-    ):
+    def test_get_user_not_found(self, http_client, mock_get_user_service, user_data):
         """Test user not found."""
 
         user: UserSchema = UserSchema(**user_data)
 
-        mock_get_user_service.side_effect = ObjectsNotFoundException(
-            "User not found"
-        )
+        mock_get_user_service.side_effect = ObjectsNotFoundException("User not found")
 
         result = http_client.get(f"/users/{user.id}")
 

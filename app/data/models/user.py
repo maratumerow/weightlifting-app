@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.constants import UserGroup
-from app.data.models.base import Base
+from app.data.models import Base
+
 from app.data.models.base_fields import created_at, int_pk, updated_at
 
 
@@ -21,6 +22,7 @@ class User(Base):
     image: Mapped[str] = mapped_column(default="")
     is_active: Mapped[bool] = mapped_column(default=True)
     email_subscribe: Mapped[bool] = mapped_column(default=True)
+    is_test: Mapped[bool] = mapped_column(default=False)
     group: Mapped[UserGroup] = mapped_column(default=UserGroup.USER)
     created_at: Mapped[created_at]
     updated_at: Mapped[updated_at]

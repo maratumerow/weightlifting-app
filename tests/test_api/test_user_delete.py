@@ -11,9 +11,7 @@ from app.exceptions.exc_404 import ObjectsNotFoundException
 def mock_delete_user_service(monkeypatch) -> Mock:
     mock_service = Mock()
     mock_cls = Mock(return_value=mock_service)
-    monkeypatch.setattr(
-        app.api.routes.users, "UserDeleteService", mock_cls
-    )
+    monkeypatch.setattr(app.api.routes.users, "UserDeleteService", mock_cls)
     return mock_service
 
 

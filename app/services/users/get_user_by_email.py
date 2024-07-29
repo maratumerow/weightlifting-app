@@ -14,12 +14,8 @@ class UserGetByEmailService(IUserGetByEmailService):
 
         if user is None:
             logging.error(f"User with EMAIL={user_email} not found")
-            raise ObjectsNotFoundException(
-                detail="User with this email does not exist"
-            )
+            raise ObjectsNotFoundException(detail="User with this email does not exist")
         if not user.is_active:
             logging.error(f"User with EMAIL={user_email} is not active")
-            raise ObjectsForbiddenException(
-                detail="User with this email is not active"
-            )
+            raise ObjectsForbiddenException(detail="User with this email is not active")
         return user

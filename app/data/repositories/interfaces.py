@@ -3,8 +3,7 @@ import abc
 from sqlalchemy.orm import Session
 
 from app.schemas.user import User as UserSchema
-from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
-                              UserUpdate)
+from app.schemas.user import UserAuthenticate, UserCreate, UserExists, UserUpdate
 
 
 class IUserRepository(abc.ABC):
@@ -26,9 +25,7 @@ class IUserRepository(abc.ABC):
         """Get a user by username."""
 
     @abc.abstractmethod
-    def get_username_and_email_exists(
-        self, username: str, email: str
-    ) -> UserExists:
+    def get_username_and_email_exists(self, username: str, email: str) -> UserExists:
         """Check if a user with the given username and email exists."""
 
     @abc.abstractmethod

@@ -1,10 +1,18 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class PostgresSettings(BaseSettings):
-    host: str = "db"
+    model_config = SettingsConfigDict(env_prefix="postgres_")
+    host: str = "localhost"
     port: str = "5432"
-    user: str = "noname"
-    password: str = "noname"
-    db: str = "postgres"
-    url: str = f"postgresql://{user}:{password}@{host}:{port}/{db}"
+    user: str = "postgres"
+    password: str = "postgres"
+    db: str = "test-db"
+
+    @property
+    def url(self) -> str:
+        return (
+            f"postgresql+psycopg2://"
+            f"{self.user}:{self.password}@"
+            f"{self.host}:{self.port}/{self.db}"
+        )

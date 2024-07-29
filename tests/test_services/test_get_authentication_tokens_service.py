@@ -51,9 +51,7 @@ class TestGetAuthenticationTokensService:
         )
         user_repo = Mock(get_user_by_username=Mock(return_value=fake_user))
         result = GetAuthenticationTokensService(user_repo=user_repo)(
-            form_data=OAuth2PasswordRequestForm(
-                username="username", password="test"
-            )
+            form_data=OAuth2PasswordRequestForm(username="username", password="test")
         )
         assert result.access_token
         assert result.refresh_token

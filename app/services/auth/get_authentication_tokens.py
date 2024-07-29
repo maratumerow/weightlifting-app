@@ -18,16 +18,12 @@ class GetAuthenticationTokensService(IAuthenticationTokensService):
     ) -> TokenInfo:
         """Create access and refresh tokens for user."""
 
-        db_user = self.user_repo.get_user_by_username(
-            username=form_data.username
-        )
+        db_user = self.user_repo.get_user_by_username(username=form_data.username)
 
         if not db_user or not verify_password(
             password=form_data.password, hashed_password=db_user.password
         ):
-            logging.error(
-                f"Incorrect USERNAME={form_data.username} or PASSWORD"
-            )
+            logging.error(f"Incorrect USERNAME={form_data.username} or PASSWORD")
             raise ObjectsNotFoundException(
                 detail="Incorrect username or password",
             )

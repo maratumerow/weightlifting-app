@@ -6,7 +6,6 @@ RUN pip install --upgrade pip && pip install poetry
 
 COPY pyproject.toml poetry.lock /weightlifting-app/
 COPY app /weightlifting-app/app
-COPY alembic /weightlifting-app/alembic
 COPY alembic.ini /weightlifting-app/
 
 RUN poetry config virtualenvs.create false \
