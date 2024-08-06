@@ -1,4 +1,5 @@
-name: tests
+name: Start testing
+
 on: [push, pull_request]
 
 jobs:
@@ -8,7 +9,6 @@ jobs:
       - name: checkout 🚀
         uses: actions/checkout@v3
       - name: install poetry
-      
         uses: snok/install-poetry@v1
         with:
           virtualenvs-create: true

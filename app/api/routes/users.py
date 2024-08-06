@@ -9,11 +9,15 @@ from app.data.repositories.interfaces import IUserRepository
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate, UserUpdate
-from app.services.auth.get_authentication_tokens import \
-    GetAuthenticationTokensService
-from app.services.users import (UserCreateService, UserDeleteService,
-                                UserGetByEmailService, UserGetService,
-                                UsersGetService, UserUpdateService)
+from app.services.auth.get_authentication_tokens import GetAuthenticationTokensService
+from app.services.users import (
+    UserCreateService,
+    UserDeleteService,
+    UserGetByEmailService,
+    UserGetService,
+    UsersGetService,
+    UserUpdateService,
+)
 
 router = APIRouter(tags=["Users"])
 

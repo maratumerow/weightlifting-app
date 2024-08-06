@@ -70,9 +70,7 @@ class TestLoginUsersAPI:
             {"password": "a"},
         ],
     )
-    def test_login_invalid(
-        self, http_client, mock_auth_service, data
-    ):
+    def test_login_invalid(self, http_client, mock_auth_service, data):
         mock_auth_service.return_value = None
 
         result = http_client.post(

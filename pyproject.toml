@@ -15,6 +15,9 @@ pydantic = {extras = ["email"], version = "^2.7.0"}
 pydantic-settings = "^2.2.1"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+psycopg2-binary = "^2.9.9"
+alembic = "^1.13.2"
+sentry-sdk = {extras = ["fastapi"], version = "^2.10.0"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"

@@ -34,9 +34,7 @@ class IUserUpdateService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(
-        self, user_id: int, user_update_data: UserUpdate
-    ) -> UserSchema | None:
+    def __call__(self, user_id: int, user_update_data: UserUpdate) -> UserSchema | None:
         """Update a user by ID"""
 
 
@@ -66,9 +64,7 @@ class IAuthenticationTokensService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(
-        self, form_data: OAuth2PasswordRequestForm
-    ) -> TokenInfo | None:
+    def __call__(self, form_data: OAuth2PasswordRequestForm) -> TokenInfo | None:
         """Create access and refresh tokens for user."""
 
 

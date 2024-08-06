@@ -21,9 +21,7 @@ class UserCreateService(IUserCreateService):
             error_msgs.append("User with this email already registered")
             logging.error(f"User with EMAIL={user.email} already registered")
         if check_user.is_username:
-            logging.error(
-                f"User with USERNAME={user.username} already registered"
-            )
+            logging.error(f"User with USERNAME={user.username} already registered")
             error_msgs.append("User with this username already registered")
 
         if error_msgs:

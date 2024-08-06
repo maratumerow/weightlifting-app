@@ -1,19 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.data.models.base import Base
+from app.config import settings
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///app/data/sql_app.db"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False},
-    # echo=True,
-)
-
+engine = create_engine(settings.postgres.url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-def db_connect_init():
-    # Base.metadata.drop_all(bind=engine)
-    Base.metadata.create_all(bind=engine)

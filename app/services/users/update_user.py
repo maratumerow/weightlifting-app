@@ -9,9 +9,7 @@ from app.services.interfaces.users import IUserUpdateService
 class UserUpdateService(IUserUpdateService):
     """Service for updating a user."""
 
-    def __call__(
-        self, user_id: int, user_update_data: UserUpdate
-    ) -> UserSchema | None:
+    def __call__(self, user_id: int, user_update_data: UserUpdate) -> UserSchema | None:
         """Update a user by ID."""
 
         user = self.user_repo.update_user(

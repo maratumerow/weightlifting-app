@@ -15,12 +15,8 @@ class UserCreateApi(UserCreate):
 class UserUpdateApi(UserUpdate):
     """User update schema."""
 
-    first_name: (
-        Annotated[str, StringConstraints(min_length=2, max_length=50)] | None
-    )
-    last_name: (
-        Annotated[str, StringConstraints(min_length=2, max_length=50)] | None
-    )
+    first_name: Annotated[str, StringConstraints(min_length=2, max_length=50)] | None
+    last_name: Annotated[str, StringConstraints(min_length=2, max_length=50)] | None
 
 
 class UserResponseApi(UserBase):
