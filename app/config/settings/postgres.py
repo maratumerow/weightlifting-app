@@ -7,7 +7,7 @@ class PostgresSettings(BaseSettings):
     port: str = "5432"
     user: str = "postgres"
     password: str = "postgres"
-    db: str = "test-db"
+    db: str = "postgres-db"
 
     @property
     def url(self) -> str:

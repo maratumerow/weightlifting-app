@@ -2,7 +2,6 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.constants import UserGroup
 from app.data.models import Base
-
 from app.data.models.base_fields import created_at, int_pk, updated_at
 
 

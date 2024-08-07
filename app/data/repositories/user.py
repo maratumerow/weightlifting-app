@@ -3,7 +3,8 @@ from sqlalchemy import select
 from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
 from app.schemas.user import User as UserSchema
-from app.schemas.user import UserAuthenticate, UserCreate, UserExists, UserUpdate
+from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
+                              UserUpdate)
 from app.tools.security import hash_password
 
 

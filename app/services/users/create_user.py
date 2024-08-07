@@ -1,6 +1,7 @@
 import logging
 
 from app.exceptions.exc_400 import ObjectsAlreadyCreated
+from app.schemas.email import MailBody
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate
 from app.services.gateways.email import push_user_email_service
@@ -21,7 +22,9 @@ class UserCreateService(IUserCreateService):
             error_msgs.append("User with this email already registered")
             logging.error(f"User with EMAIL={user.email} already registered")
         if check_user.is_username:
-            logging.error(f"User with USERNAME={user.username} already registered")
+            logging.error(
+                f"User with USERNAME={user.username} already registered"
+            )
             error_msgs.append("User with this username already registered")
 
         if error_msgs:
@@ -31,5 +34,13 @@ class UserCreateService(IUserCreateService):
         logging.info(
             f"User with EMAIL={user_in.email} created. USER_ID={user_in.id}",
         )
-        push_user_email_service(email=user.email)
+
+        push_user_email_service(
+            MailBody(
+                to=[user.email],
+                subject="Welcome",
+                body="Welcome to our service",
+            )
+        )
+
         return user_in
