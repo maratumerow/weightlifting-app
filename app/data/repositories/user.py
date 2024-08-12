@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.data.models.user import User
 from app.data.repositories.interfaces import IUserRepository
@@ -10,6 +11,9 @@ from app.tools.security import hash_password
 
 class UserRepository(IUserRepository):
     """User repository."""
+
+    def __init__(self, db: Session):
+        self.db = db
 
     def get_user_by_id(self, user_id: int) -> UserSchema | None:
         user_db = self.db.query(User).filter(User.id == user_id).first()

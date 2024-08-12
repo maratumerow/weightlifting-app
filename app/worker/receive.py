@@ -1,43 +1,44 @@
-import os
-import sys
+import logging
 
 import pika
+from pydantic import ValidationError
+
+from app.schemas.email import MailBody
 
 
-def main():
-    """Receive messages from the queue named hello """
-
-    # Create a connection to the RabbitMQ server running on rabbitmq
-    connection = pika.BlockingConnection(
+def get_channel(queue):
+    connection=pika.BlockingConnection(
         pika.ConnectionParameters(host="rabbitmq")
     )
     # Create a channel
-    channel = connection.channel()
+    channel=connection.channel()
 
     # Объявите очередь с именем hello
-    channel.queue_declare(queue="hello")
+    channel.queue_declare(queue=queue)
 
-    # Определите функцию обратного вызова для получения сообщений
-    def callback(ch, method, properties, body):
-        """Callback function to receive messages"""
-        print(f" [x] Received {body}")
+    return channel
 
-    # Потреблять сообщения из очереди с именем hello
+def msg_handler(ch, method, properties, body):
+    """Callback function to receive messages"""
+    try:
+        msg = MailBody.parse_raw(body)
+    except ValidationError as err:
+        logging.error(
+            f"Invalid message format for queue=hello, err={err}"
+        )
+    # -> отправляем сообщение
+
+def main():
+    queue = "hello"
+
+    channel = get_channel(queue="hello")
     channel.basic_consume(
-        queue="hello", on_message_callback=callback, auto_ack=True
+        queue=queue, on_message_callback=msg_handler, auto_ack=False
     )
 
-    print(" [*] Waiting for messages. To exit press CTRL+C")
-    # Start consuming messages
     channel.start_consuming()
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("Interrupted")
-        try:
-            sys.exit(0)
-        except SystemExit:
-            os._exit(0)
+    main()
+

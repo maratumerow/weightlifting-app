@@ -4,7 +4,6 @@ from app.exceptions.exc_400 import ObjectsAlreadyCreated
 from app.schemas.email import MailBody
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate
-from app.services.gateways.email import push_user_email_service
 from app.services.interfaces.users import IUserCreateService
 
 
@@ -34,13 +33,9 @@ class UserCreateService(IUserCreateService):
         logging.info(
             f"User with EMAIL={user_in.email} created. USER_ID={user_in.id}",
         )
-
-        push_user_email_service(
-            MailBody(
+        self.email_repo.send_email(MailBody(
                 to=[user.email],
                 subject="Welcome",
                 body="Welcome to our service",
-            )
-        )
-
+            ))
         return user_in

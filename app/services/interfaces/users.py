@@ -2,16 +2,56 @@ import abc
 
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.data.repositories.interfaces import IUserRepository
 from app.schemas.auth import TokenInfo
-from app.schemas.user import User as UserSchema
+from app.schemas.user import User as UserSchema, UserAuthenticate, UserExists
 from app.schemas.user import UserCreate, UserUpdate
+from app.services.interfaces.email_gateways import IEmailGateway
+
+
+class IUserRepository(abc.ABC):
+    """Interface for user repository."""
+
+    @abc.abstractmethod
+    def get_user_by_id(self, user_id: int) -> UserSchema | None:
+        """Get a user by ID."""
+
+    @abc.abstractmethod
+    def get_user_by_email(self, email: str) -> UserSchema | None:
+        """Get a user by email."""
+
+    @abc.abstractmethod
+    def get_user_by_username(self, username: str) -> UserAuthenticate | None:
+        """Get a user by username."""
+
+    @abc.abstractmethod
+    def get_username_and_email_exists(self, username: str, email: str) -> UserExists:
+        """Check if a user with the given username and email exists."""
+
+    @abc.abstractmethod
+    def get_users(self, skip: int = 0, limit: int = 100) -> list[UserSchema]:
+        """Get a list of users with optional skipping and limiting."""
+
+    @abc.abstractmethod
+    def create_user(self, user: UserCreate) -> UserSchema:
+        """Create a user."""
+
+    @abc.abstractmethod
+    def update_user(
+        self, user_id: int, user_update_data: UserUpdate
+    ) -> UserSchema | None:
+        """Update a user."""
+
+    @abc.abstractmethod
+    def delete_user(self, user_id: int) -> bool:
+        """Delete a user."""
+
 
 
 class IUserCreateService(abc.ABC):
     """Interface for creating a user."""
 
-    def __init__(self, user_repo: IUserRepository):
+    def __init__(self, user_repo: IUserRepository, email_repo: IEmailGateway):
+        self.email_repo=email_repo
         self.user_repo = user_repo
 
     def __call__(self, user: UserCreate) -> UserSchema | None:

@@ -5,12 +5,14 @@ from pydantic import EmailStr
 from app.api.dependencies.auth import get_token_subject
 from app.api.dependencies.db import user_repo_dep
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
-from app.data.repositories.interfaces import IUserRepository
+from app.gateways.rabbitmq_email import RabbitMqEmail
+
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate, UserUpdate
 from app.services.auth.get_authentication_tokens import \
     GetAuthenticationTokensService
+from app.services.interfaces.users import IUserRepository
 from app.services.users import (UserCreateService, UserDeleteService,
                                 UserGetByEmailService, UserGetService,
                                 UsersGetService, UserUpdateService)
@@ -54,7 +56,7 @@ def create_user_router(
     user: UserCreateApi,
     user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    service = UserCreateService(user_repo=user_repo)
+    service = UserCreateService(user_repo=user_repo, email_repo=RabbitMqEmail())
     return service(user=UserCreate.model_validate(user, from_attributes=True))
 
 
