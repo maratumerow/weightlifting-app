@@ -51,7 +51,8 @@ def run_migrations_online() -> None:
 
     """
 
-    if "sqlalchemy.url" not in config.get_section(config.config_ini_section):
+    section = config.get_section(config.config_ini_section)
+    if section is None or "sqlalchemy.url" not in section:
         config.set_main_option("sqlalchemy.url", settings.postgres.url)
 
     connectable = engine_from_config(
@@ -61,7 +62,9 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection, target_metadata=target_metadata
+        )
 
         with context.begin_transaction():
             context.run_migrations()

@@ -2,10 +2,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.data.models.user import User
-from app.data.repositories.interfaces import IUserRepository
 from app.schemas.user import User as UserSchema
 from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
                               UserUpdate)
+from app.services.interfaces.users import IUserRepository
 from app.tools.security import hash_password
 
 

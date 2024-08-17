@@ -1,10 +1,9 @@
 import abc
 
-from fastapi.security import OAuth2PasswordRequestForm
-
 from app.schemas.auth import TokenInfo
-from app.schemas.user import User as UserSchema, UserAuthenticate, UserExists
-from app.schemas.user import UserCreate, UserUpdate
+from app.schemas.user import User as UserSchema
+from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
+                              UserUpdate)
 from app.services.interfaces.email_gateways import IEmailGateway
 
 
@@ -24,7 +23,9 @@ class IUserRepository(abc.ABC):
         """Get a user by username."""
 
     @abc.abstractmethod
-    def get_username_and_email_exists(self, username: str, email: str) -> UserExists:
+    def get_username_and_email_exists(
+        self, username: str, email: str
+    ) -> UserExists:
         """Check if a user with the given username and email exists."""
 
     @abc.abstractmethod
@@ -46,12 +47,11 @@ class IUserRepository(abc.ABC):
         """Delete a user."""
 
 
-
 class IUserCreateService(abc.ABC):
     """Interface for creating a user."""
 
     def __init__(self, user_repo: IUserRepository, email_repo: IEmailGateway):
-        self.email_repo=email_repo
+        self.email_repo = email_repo
         self.user_repo = user_repo
 
     def __call__(self, user: UserCreate) -> UserSchema | None:
@@ -74,7 +74,9 @@ class IUserUpdateService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(self, user_id: int, user_update_data: UserUpdate) -> UserSchema | None:
+    def __call__(
+        self, user_id: int, user_update_data: UserUpdate
+    ) -> UserSchema | None:
         """Update a user by ID"""
 
 
@@ -104,7 +106,7 @@ class IAuthenticationTokensService(abc.ABC):
     def __init__(self, user_repo: IUserRepository):
         self.user_repo = user_repo
 
-    def __call__(self, form_data: OAuth2PasswordRequestForm) -> TokenInfo | None:
+    def __call__(self, username: str, password: str) -> TokenInfo | None:
         """Create access and refresh tokens for user."""
 
 

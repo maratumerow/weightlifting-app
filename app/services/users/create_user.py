@@ -33,9 +33,12 @@ class UserCreateService(IUserCreateService):
         logging.info(
             f"User with EMAIL={user_in.email} created. USER_ID={user_in.id}",
         )
-        self.email_repo.send_email(MailBody(
+
+        self.email_repo.send_email(
+            MailBody(
                 to=[user.email],
                 subject="Welcome",
                 body="Welcome to our service",
-            ))
+            )
+        )
         return user_in

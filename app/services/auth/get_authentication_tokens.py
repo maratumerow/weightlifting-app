@@ -10,11 +10,7 @@ from app.tools.security import verify_password
 class GetAuthenticationTokensService(IAuthenticationTokensService):
     """Service for creating access and refresh tokens for user."""
 
-    def __call__(
-        self,
-        username: str,
-        password: str,
-    ) -> TokenInfo:
+    def __call__(self, username: str, password: str) -> TokenInfo:
         """Create access and refresh tokens for user."""
 
         db_user = self.user_repo.get_user_by_username(username=username)
