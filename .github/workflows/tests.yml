@@ -18,7 +18,7 @@ jobs:
       - name: Run tests with coverage 🏁
         run: |
           poetry run pytest --cov=app tests/
-          if [ -f coverage.svg ]; then
+          poetry run coverage-badge -o ./coverage.svg
+          if [ -f ./coverage.svg ]; then
             rm coverage.svg
           fi
-          poetry run coverage-badge -o coverage.svg
