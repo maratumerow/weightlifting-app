@@ -1,5 +1,3 @@
-from urllib import response
-
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import EmailStr

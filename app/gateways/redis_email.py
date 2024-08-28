@@ -31,9 +31,7 @@ class RedisEmail(IEmailGateway):
                 self.message_queue, body.model_dump_json().encode()
             )
             logging.info(
-                f"Processed email TO:{body.to} "
-                f"SUBJECT:{body.subject} "
-                f"BODY:{body.body}"
+                f"Processed email TO:{body.to}"
             )
         except redis.RedisError as e:
             logging.error(f"Failed to send email via Redis: {e}")
