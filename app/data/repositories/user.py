@@ -3,8 +3,12 @@ from sqlalchemy.orm import Session
 
 from app.data.models.user import User
 from app.schemas.user import User as UserSchema
-from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
-                              UserUpdate)
+from app.schemas.user import (
+    UserAuthenticate,
+    UserCreate,
+    UserExists,
+    UserUpdate,
+)
 from app.services.interfaces.users import IUserRepository
 from app.tools.security import hash_password
 
@@ -33,14 +37,18 @@ class UserRepository(IUserRepository):
             return None
         return UserAuthenticate.model_validate(user, from_attributes=True)
 
-    def get_username_and_email_exists(self, username: str, email: str) -> UserExists:
+    def get_username_and_email_exists(
+        self, username: str, email: str
+    ) -> UserExists:
         subq_username = (
             select(User.username).where(User.username == username)
         ).exists()
         subq_email = (select(User.email).where(User.email == email)).exists()
 
         result = self.db.execute(
-            select(subq_username.label("u_name"), subq_email.label("u_email")).limit(1),
+            select(
+                subq_username.label("u_name"), subq_email.label("u_email")
+            ).limit(1),
         ).first()
 
         is_username = result.u_name if result else False
@@ -54,7 +62,8 @@ class UserRepository(IUserRepository):
     def get_users(self, skip: int = 0, limit: int = 100) -> list[UserSchema]:
         users_db = self.db.query(User).offset(skip).limit(limit).all()
         return [
-            UserSchema.model_validate(user, from_attributes=True) for user in users_db
+            UserSchema.model_validate(user, from_attributes=True)
+            for user in users_db
         ]
 
     def create_user(self, user: UserCreate) -> UserSchema:
@@ -88,6 +97,14 @@ class UserRepository(IUserRepository):
         user_db = self.db.query(User).filter(User.id == user_id).first()
         if user_db:
             self.db.delete(user_db)
+            self.db.commit()
+            return True
+        return False
+
+    def activate_user(self, email: str) -> bool:
+        user_db = self.db.query(User).filter(User.email == email).first()
+        if user_db:
+            user_db.is_active = True
             self.db.commit()
             return True
         return False

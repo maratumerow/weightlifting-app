@@ -10,11 +10,14 @@ class RedisEmail(IEmailGateway):
     """Redis email gateway."""
 
     def __init__(
-        self, host: str = "redis", port: int = 6379, queue: str = "email_queue"
+        self,
+        host: str = "redis",
+        port: int = 6379,
+        message_queue: str = "email_queue",
     ):
         """Initialize the Redis email gateway."""
 
-        self.queue = queue
+        self.message_queue = message_queue
         try:
             self.redis_client = redis.Redis(host=host, port=port)
         except redis.ConnectionError as e:
@@ -25,10 +28,12 @@ class RedisEmail(IEmailGateway):
 
         try:
             self.redis_client.lpush(
-                self.queue, body.model_dump_json().encode()
+                self.message_queue, body.model_dump_json().encode()
             )
             logging.info(
-                f"TO:{body.to} SUBJECT:{body.subject} BODY:{body.body}"
+                f"Processed email TO:{body.to} "
+                f"SUBJECT:{body.subject} "
+                f"BODY:{body.body}"
             )
         except redis.RedisError as e:
             logging.error(f"Failed to send email via Redis: {e}")

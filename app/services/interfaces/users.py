@@ -2,8 +2,12 @@ import abc
 
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User as UserSchema
-from app.schemas.user import (UserAuthenticate, UserCreate, UserExists,
-                              UserUpdate)
+from app.schemas.user import (
+    UserAuthenticate,
+    UserCreate,
+    UserExists,
+    UserUpdate,
+)
 from app.services.interfaces.email_gateways import IEmailGateway
 
 
@@ -45,6 +49,10 @@ class IUserRepository(abc.ABC):
     @abc.abstractmethod
     def delete_user(self, user_id: int) -> bool:
         """Delete a user."""
+
+    @abc.abstractmethod
+    def activate_user(self, email: str) -> bool:
+        """Activate a user."""
 
 
 class IUserCreateService(abc.ABC):
@@ -118,3 +126,13 @@ class IUserGetByEmailService(abc.ABC):
 
     def __call__(self, user_email: str) -> UserSchema | None:
         """Get a user by email."""
+
+
+class IConfirmEmailService(abc.ABC):
+    """Interface for confirming a user email."""
+
+    def __init__(self, user_repo: IUserRepository) -> None:
+        self.user_repo = user_repo
+
+    def __call__(self, token: str) -> None:
+        """Confirm a user email."""

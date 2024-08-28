@@ -11,7 +11,9 @@ from app.schemas.auth import TokenPayload
 reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/login/", scheme_name="JWT")
 
 
-def create_access_token(subject: str, expire_timedelta: timedelta | None = None) -> str:
+def create_access_token(
+    subject: str, expire_timedelta: timedelta | None = None
+) -> str:
     """Create an access token for a user."""
 
     return create_token(subject, auth_jwt.JWT_SECRET_KEY, expire_timedelta)
@@ -39,7 +41,9 @@ def create_token(
     """Create a token for a user."""
 
     now = datetime.now(timezone.utc)
-    expire = now + (expire_timedelta or timedelta(minutes=default_expire_minutes))
+    expire = now + (
+        expire_timedelta or timedelta(minutes=default_expire_minutes)
+    )
 
     to_encode = {"exp": expire, "sub": subject}
     encoded_jwt = jwt.encode(to_encode, secret_key, auth_jwt.ALGORITHM)

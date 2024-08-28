@@ -1,3 +1,5 @@
+from urllib import response
+
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import EmailStr
@@ -5,18 +7,37 @@ from pydantic import EmailStr
 from app.api.dependencies.auth import get_token_subject
 from app.api.dependencies.db import user_repo_dep
 from app.api.schemas.user import UserCreateApi, UserUpdateApi
-from app.gateways import RabbitMqEmail, RedisEmail
+from app.gateways import RedisEmail
 from app.schemas.auth import TokenInfo
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate, UserUpdate
-from app.services.auth.get_authentication_tokens import \
-    GetAuthenticationTokensService
+from app.services.auth.get_authentication_tokens import (
+    GetAuthenticationTokensService,
+)
 from app.services.interfaces.users import IUserRepository
-from app.services.users import (UserCreateService, UserDeleteService,
-                                UserGetByEmailService, UserGetService,
-                                UsersGetService, UserUpdateService)
+from app.services.users import (
+    ConfirmEmailService,
+    UserCreateService,
+    UserDeleteService,
+    UserGetByEmailService,
+    UserGetService,
+    UsersGetService,
+    UserUpdateService,
+)
 
 router = APIRouter(tags=["Users"])
+
+
+@router.get(
+    "/confirm-email",
+    summary="Confirm email",
+)
+def confirm_email(
+    token: str,
+    user_repo: IUserRepository = Depends(user_repo_dep),
+):
+    service = ConfirmEmailService(user_repo=user_repo)
+    return service(token=token)
 
 
 @router.get(
@@ -58,9 +79,7 @@ def create_user_router(
     user: UserCreateApi,
     user_repo: IUserRepository = Depends(user_repo_dep),
 ):
-    service = UserCreateService(
-        user_repo=user_repo, email_repo=RabbitMqEmail()
-    )
+    service = UserCreateService(user_repo=user_repo, email_repo=RedisEmail())
     return service(user=UserCreate.model_validate(user, from_attributes=True))
 
 
