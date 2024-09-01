@@ -1,4 +1,5 @@
 import logging
+import time
 
 import redis
 
@@ -26,12 +27,22 @@ class RedisEmail(IEmailGateway):
     def send_email(self, body: MailBody) -> None:
         """Send an email using Redis."""
 
-        try:
-            self.redis_client.lpush(
-                self.message_queue, body.model_dump_json().encode()
-            )
-            logging.info(
-                f"Processed email TO:{body.to}"
-            )
-        except redis.RedisError as e:
-            logging.error(f"Failed to send email via Redis: {e}")
+        max_retries = 3
+        retry_delay = 5
+
+        for attempt in range(max_retries):
+            try:
+                self.redis_client.lpush(
+                    self.message_queue, body.model_dump_json().encode()
+                )
+                logging.info(f"Processed email TO:{body.to}")
+                return
+            except redis.RedisError as e:
+                logging.error(f"Attempt {attempt + 1} failed: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                else:
+                    logging.error(
+                        f"Failed to send email via Redis"
+                        f"after {max_retries} attempts: {e}"
+                    )
