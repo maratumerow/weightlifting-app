@@ -2,7 +2,6 @@ from fastapi import FastAPI
 
 from app.api.routes.users import router
 from app.config import Settings, settings
-
 from app.tools.logging_config import setup_logging
 from app.tools.sentry import sentry_init
 

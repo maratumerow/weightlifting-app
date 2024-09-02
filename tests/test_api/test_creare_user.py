@@ -1,5 +1,5 @@
 # type: ignore
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -10,15 +10,17 @@ from app.schemas.user import User as UserSchema
 @pytest.fixture
 def mock_create_user_service(monkeypatch) -> Mock:
     mock_service = Mock()
-
     mock_cls = Mock(return_value=mock_service)
-
-    monkeypatch.setattr(
-        app.api.routes.users,
-        "UserCreateService",
-        mock_cls,
-    )
+    monkeypatch.setattr(app.api.routes.users, "UserCreateService", mock_cls)
     return mock_service
+
+
+@pytest.fixture
+def mock_rabbitmq_connection():
+    with patch(
+        "app.gateways.rabbitmq_email.pika.BlockingConnection"
+    ) as mock_connection:
+        yield mock_connection
 
 
 class TestCreateUsersAPI:
@@ -27,7 +29,11 @@ class TestCreateUsersAPI:
     CREATE_USER_URL = "/users/register"
 
     def test_create_user_success(
-        self, http_client, mock_create_user_service, user_data
+        self,
+        http_client,
+        mock_create_user_service,
+        user_data,
+        mock_rabbitmq_connection,
     ):
         """Test creating a user."""
 
@@ -74,6 +80,7 @@ class TestCreateUsersAPI:
         http_client,
         mock_create_user_service,
         request_data,
+        mock_rabbitmq_connection,
     ):
         """Test creating a user with invalid request_data."""
 

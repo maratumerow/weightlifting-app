@@ -17,9 +17,7 @@ class TestGetAuthenticationTokensService:
             ObjectsNotFoundException, match="Incorrect username or password"
         ):
             GetAuthenticationTokensService(user_repo=user_repo)(
-                form_data=OAuth2PasswordRequestForm(
-                    username="username", password="password"
-                )
+                username="username", password="password"
             )
 
     def test_with_invalid_password(self):
@@ -35,9 +33,7 @@ class TestGetAuthenticationTokensService:
             ObjectsNotFoundException, match="Incorrect username or password"
         ):
             GetAuthenticationTokensService(user_repo=user_repo)(
-                form_data=OAuth2PasswordRequestForm(
-                    username="username", password="password"
-                )
+                username="username", password="password"
             )
 
     def test_success(self):
@@ -51,7 +47,7 @@ class TestGetAuthenticationTokensService:
         )
         user_repo = Mock(get_user_by_username=Mock(return_value=fake_user))
         result = GetAuthenticationTokensService(user_repo=user_repo)(
-            form_data=OAuth2PasswordRequestForm(username="username", password="test")
+            username="username", password="test"
         )
         assert result.access_token
         assert result.refresh_token

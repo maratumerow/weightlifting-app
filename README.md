@@ -1,5 +1,6 @@
 # weightlifting-app
-Weightlifting app
+
+Welcome to the sport app!
 
 
 
